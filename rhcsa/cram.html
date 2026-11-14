@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHCSA EX200 — 速記重點（單頁版）</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-redhat">
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>⚡ RHCSA (EX200) — 速記重點 (Cram Jam)</h1>
+      <div class="sub">指令回憶速查表 · 搭配<a href="index.html" style="color:#fff;text-decoration:underline;">完整指南</a> · 所有配置必須在重開機後依然生效。</div>
+    </div>
+    <div class="meta">
+      <b>100% 實機操作</b> · 3 小時 · 及格分 <b>210</b>/300<br>
+      $500 美元 · 含一次免費補考 · 效期 3 年<br>
+      可使用 man 手冊與 /usr/share/doc · 無網際網路
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">完整指南</a>
+      <button class="btn" onclick="window.print()">列印</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Root 密碼重設 ★</h2>
+      <p>GRUB 開機選單 → 按 <span class="mono">e</span> → 在 linux 核心列末端附加參數 → <span class="mono">Ctrl+X</span></p>
+      <ul>
+        <li><b>rd.break 方法：</b> <span class="mono">mount -o remount,rw /sysroot</span> → <span class="mono">chroot /sysroot</span> → <span class="mono">passwd root</span> → <b><span class="mono">touch /.autorelabel</span></b> → 執行 exit 兩次退出</li>
+        <li>備用方案 <span class="mono">init=/bin/bash</span>：remount rw / → passwd → autorelabel → <span class="mono">exec /sbin/init</span></li>
+      </ul>
+      <div class="warn">忘記 touch /.autorelabel → 重開機後 SELinux 權限錯誤導致完全無法登入！</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">LVM 邏輯卷管理</h2>
+      <ul>
+        <li><span class="mono">pvcreate /dev/sdb1</span> → <span class="mono">vgcreate vgdata /dev/sdb1</span> (<span class="mono">-s 16M</span> 設定 PE 大小) → <span class="mono">lvcreate -n lvdata -L 500M vgdata</span></li>
+        <li><b>-L</b> = 具體容量大小；<b>-l</b> = 邏輯延伸區 (Extents) 數量；<span class="bad">百分比 % 只能搭配 -l</span> (<span class="mono">-l 100%FREE</span>)</li>
+        <li>擴充容量：<span class="mono">vgextend</span> → <b><span class="mono">lvextend -r -L +500M /dev/vgdata/lvdata</span></b> (-r 參數會連同檔案系統一起自動調整)</li>
+        <li>手動擴充檔案系統：<span class="mono">xfs_growfs /mnt</span> (XFS 指定掛載點) vs <span class="mono">resize2fs /dev/…</span> (ext4 指定裝置路徑)。<span class="bad">注意：XFS 無法縮減 (shrink)。</span></li>
+        <li>檢視狀態：<span class="mono">pvs vgs lvs lsblk</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>磁碟分割與 Swap</h2>
+      <ul>
+        <li><span class="mono">parted /dev/sdb mklabel gpt</span> (<b>立即寫入生效</b>，無法復原) → <span class="mono">mkpart data xfs 1MiB 501MiB</span> → <span class="mono">set 1 lvm on</span></li>
+        <li>格式化 mkfs 之前先執行 <span class="mono">udevadm settle</span>；修改正在使用中的磁碟後執行 <span class="mono">partprobe</span></li>
+        <li>Swap 置換空間：<span class="mono">mkswap</span> → <span class="mono">swapon</span> → fstab 加入 <span class="mono">… none swap defaults 0 0</span> → 執行 <span class="mono">swapon -a &amp;&amp; swapon --show</span> 驗證</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">fstab 與掛載 ★</h2>
+      <ul>
+        <li>使用 <span class="mono">blkid</span> 查詢 UUID → fstab 設定：<span class="mono">UUID=…  /data  xfs  defaults  0 0</span></li>
+        <li>重開機前<b>務必</b>執行 <span class="mono">mount -a</span> 與 <span class="mono">findmnt --verify</span> 檢查</li>
+      </ul>
+      <div class="warn">fstab 打錯字 = 系統開機進入 emergency mode = 考試整台掛掉 0 分。每次修改後務必驗證！</div>
+    </div>
+
+    <div class="box">
+      <h2>NFS 與 autofs 自動掛載</h2>
+      <ul>
+        <li><span class="mono">dnf install -y autofs nfs-utils; systemctl enable --now autofs</span></li>
+        <li>主配置檔 <span class="mono">/etc/auto.master.d/x.autofs</span>：間接掛載 <span class="mono">/shares /etc/auto.shares</span> · 直接掛載 <span class="mono">/- /etc/auto.direct</span></li>
+        <li>對應設定：<span class="mono">work -rw,sync serverb:/shares/work</span></li>
+        <li>萬用字元家目錄：<span class="mono">* -rw serverb:/home/guests/&amp;</span></li>
+        <li>切勿預先手動建立間接掛載目錄；修改後記得重啟 autofs 服務</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">SELinux 安全增強 ★</h2>
+      <ul>
+        <li><span class="mono">getenforce · setenforce 0|1</span> · 永久設定檔：<span class="mono">/etc/selinux/config</span></li>
+        <li><b>設定永久 Context 標準口訣：</b> <span class="mono">semanage fcontext -a -t httpd_sys_content_t '/web(/.*)?'</span> → <span class="mono">restorecon -Rv /web</span> (正規表示式請務必加單引號)</li>
+        <li>參考既有正確型別：<span class="mono">semanage fcontext -l | grep /var/www</span></li>
+        <li>自訂連接埠：<span class="mono">semanage port -a -t http_port_t -p tcp 82</span></li>
+        <li>布林值：<span class="mono">setsebool -P httpd_can_network_connect on</span></li>
+        <li>查看阻擋日誌：<span class="mono">ausearch -m AVC -ts recent</span></li>
+        <li>若找不到 semanage 指令 → 執行 <span class="mono">dnf provides */semanage</span> 查詢套件</li>
+      </ul>
+      <div class="warn">使用 chcon 會在重新標籤 (relabel) 後失效！setsebool 若沒加 -P 參數在重開機後會失效！</div>
+    </div>
+
+    <div class="box">
+      <h2>firewalld 防火牆 ★</h2>
+      <ul>
+        <li><span class="mono">firewall-cmd --permanent --add-service=http</span></li>
+        <li><span class="mono">firewall-cmd --permanent --add-port=8080/tcp</span></li>
+        <li><b><span class="mono">firewall-cmd --reload</span></b> · 檢查指令 <span class="mono">--list-all</span></li>
+        <li>保留目前執行時期的變更：<span class="mono">--runtime-to-permanent</span></li>
+      </ul>
+      <div class="warn">只加 --permanent 當前不會生效（需 reload）；沒加 --permanent 重開機就消失。兩者皆需注意！</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">nmcli 網路管理 ★</h2>
+      <ul>
+        <li><span class="mono">nmcli con add con-name lab type ethernet ifname enp1s0 ipv4.method manual ipv4.addresses 192.168.1.10/24 ipv4.gateway 192.168.1.1 ipv4.dns 192.168.1.1</span></li>
+        <li>追加 DNS：<span class="mono">nmcli con mod lab +ipv4.dns 8.8.8.8</span></li>
+        <li><b>接著執行 <span class="mono">nmcli con up lab</span></b> — 修改設定後必須重新啟用連線才會套用生效</li>
+        <li><span class="mono">hostnamectl set-hostname s1.example.com</span> 並確認 /etc/hosts</li>
+      </ul>
+      <div class="warn">網路設定錯誤或重開機未持久化 = 評分腳本無法連入系統 = 該大項直接 0 分。</div>
+    </div>
+
+    <div class="box">
+      <h2>使用者與群組</h2>
+      <ul>
+        <li><span class="mono">useradd -u 2000 -G wheel,devs -s /bin/bash bob</span> · 禁止登入：<span class="mono">-s /sbin/nologin</span></li>
+        <li><b><span class="mono">usermod -aG devs bob</span></b> — <span class="bad">-G 若未加 -a 會覆蓋並清除原本的所有附屬群組</span></li>
+        <li>密碼期限：<span class="mono">chage -M 90 -m 7 -W 5 bob</span> · 強制下次登入改密碼：<span class="mono">chage -d 0</span> · 帳號過期：<span class="mono">chage -E 日期</span></li>
+        <li>sudo 權限：在 <span class="mono">/etc/sudoers.d/</span> 新增檔案 (<span class="mono">bob ALL=(ALL) ALL</span>)，並用 <span class="mono">visudo -cf</span> 檢查；或直接加入 wheel 群組：<span class="mono">usermod -aG wheel</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">systemd · 日誌 (journal) · tuned</h2>
+      <ul>
+        <li><b><span class="mono">systemctl enable --now httpd</span></b> (enable 啟用開機自啟 ≠ start 啟動！)</li>
+        <li>預設目標：<span class="mono">systemctl set-default multi-user.target</span> · 即時切換：<span class="mono">isolate</span></li>
+        <li>日誌查詢：<span class="mono">journalctl -u sshd -b · -p err · --since "…" · -f</span></li>
+        <li><b>持久化儲存日誌：</b> <span class="mono">mkdir -p /var/log/journal &amp;&amp; systemctl restart systemd-journald</span></li>
+        <li>效能調校：<span class="mono">tuned-adm active / profile virtual-guest / recommend</span></li>
+        <li>處理程序：<span class="mono">ps aux --sort=-%cpu · kill · nice -n 10 · renice</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>工作排程與時間同步</h2>
+      <ul>
+        <li>cron 欄位格式：<b>分 時 日 月 週</b> · <span class="mono">0 2 * * 1-5</span> = 工作日凌晨 2 點 · <span class="mono">*/5</span> = 每 5 分鐘 · /etc/cron.d/ 系統排程需額外加上<b>使用者欄位</b></li>
+        <li>一次性排程：<span class="mono">at 23:00</span> → 輸入指令 → Ctrl+D 結束 · 查詢/刪除：<span class="mono">atq / atrm</span></li>
+        <li>V10 新增：使用含 <span class="mono">OnCalendar=</span> 的 .timer 單元 + <span class="mono">systemctl enable --now x.timer</span></li>
+        <li>chrony 時間伺服器：在 /etc/chrony.conf 設定 <span class="mono">server host iburst</span> → 重啟服務 → <span class="mono">chronyc sources -v</span> (帶有 ^* 表示已成功同步) · <span class="mono">timedatectl set-timezone</span> 設定時區</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">dnf 與軟體套件庫 ★</h2>
+      <ul>
+        <li><span class="mono">dnf install/search/info/history</span> · 依指令尋找所屬套件：<b><span class="mono">dnf provides */semanage</span></b></li>
+        <li>.repo 格式 (務必背熟 — 題目只會給你 URL)：<br><span class="mono">[baseos]</span><br><span class="mono">name=BaseOS</span><br><span class="mono">baseurl=http://…/BaseOS</span><br><span class="mono">enabled=1</span><br><span class="mono">gpgcheck=0</span></li>
+        <li><span class="bad">RHEL 安裝源有兩個庫：BaseOS 與 AppStream，兩個都必須設定！</span></li>
+        <li>V10 Flatpak：<span class="mono">flatpak remote-add --if-not-exists flathub URL · install · list</span></li>
+        <li>V10 開機載入器：修改 <span class="mono">/etc/default/grub</span> → <span class="mono">grub2-mkconfig -o /boot/grub2/grub.cfg</span> · <span class="mono">grubby --update-kernel=ALL --args=…</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>容器管理 (僅限 V9 考試)</h2>
+      <ul>
+        <li><span class="mono">podman pull/images/ps -a/inspect/logs</span> · <span class="mono">skopeo inspect docker://…</span> · <span class="mono">podman login</span> · 建置映象檔：<span class="mono">podman build -t x .</span></li>
+        <li><span class="mono">podman run -d --name web -p 8080:8080 -v /host:/ctr<b>:Z</b> IMG</span></li>
+        <li>非 root 容器 (Rootless)：無法綁定 1024 以下的特權連接埠</li>
+        <li><b>將容器註冊為 systemd 服務：</b> <span class="mono">loginctl enable-linger $USER</span> → 進入 <span class="mono">~/.config/systemd/user</span> → <span class="mono">podman generate systemd --new --files --name web</span> → <span class="mono">systemctl --user daemon-reload &amp;&amp; enable --now container-web</span></li>
+      </ul>
+      <div class="warn">掛載目錄缺少 :Z = 遭遇 SELinux 權限阻擋。未啟用 linger = 使用者登出時容器服務停止。--user 必須透過真實 SSH 連線執行，不可使用 su -。</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">實用工具 · 權限 · Shell 腳本</h2>
+      <ul>
+        <li>打包壓縮：<span class="mono">tar -czf a.tgz /etc</span> (z 為 gzip · j 為 bzip2 · J 為 xz) · 解壓縮 <span class="mono">-xzf -C /dest</span> · 列出內容 <span class="mono">-tf</span></li>
+        <li>搜尋：<span class="mono">find /home -user bob -exec cp -p {} /dest \;</span> · <span class="mono">-perm -4000</span> (SUID) · <span class="mono">-size +100M</span></li>
+        <li>文字過濾與重新導向：<span class="mono">grep -ivrE 'patt' /etc</span> · 導向符號 <span class="mono">&gt; &gt;&gt; 2&gt; &amp;&gt; 2&gt;&amp;1</span></li>
+        <li>硬連結 ln (同一檔案系統) vs 符號連結 ln -s · SGID 群組共用目錄：<span class="mono">chgrp devs /d; chmod 2770 /d</span></li>
+        <li>存取控制清單 ACL：<span class="mono">setfacl -m u:bob:rw file</span> · 目錄預設 ACL <span class="mono">-m d:u:bob:rw /dir</span> · 檢視 <span class="mono">getfacl</span></li>
+        <li>umask 計算 (從 666/777 扣除)：027 → 檔案 640 / 目錄 750</li>
+        <li>SSH 金鑰認證：ssh-keygen → <span class="mono">ssh-copy-id user@host</span> (~/.ssh 權限 700，authorized_keys 權限 600)</li>
+        <li>Shell 腳本基礎：<span class="mono">#!/bin/bash · $1 $# $? · if [ -f x ]; then · for i in …; do · v=$(cmd)</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">考試當日檢查清單</h2>
+      <div class="tip">先瀏覽所有考題 · 掌握能快速拿分的題目 → 遇到難題先略過回頭再解 · 儘早設定好考試主機之間的 SSH 金鑰免密登入 · vim 中可用 Ctrl+[ 代替 Esc · <b>最後 20 分鐘：將所有系統重開機並逐一驗證每個考題要求！</b></div>
+      <div class="warn">會讓整個大項直接 0 分的致命陷阱：fstab 拼錯 (務必執行 mount -a！) · 服務只 start 卻沒 enable · 防火牆沒加 --permanent 或沒加 --reload · 錯誤使用 chcon 替代 semanage · setsebool 沒加 -P · 重設 root 密碼忘記 touch /.autorelabel · usermod -G 沒加 -a · 網路修改後未重新 up · 安裝源只設定了兩個套件庫 (BaseOS + AppStream) 其中之一。</div>
+      <p><b>考試最高準則：當下功能正常嗎？重開機後還能正常運作嗎？請務必驗證！</b></p>
+    </div>
+
+  </div>
+  <div class="footnote">速記重點 · RHCSA EX200（適用 RHEL 9 / 10 — 請確認您報考的版本；容器考題限 V9，Flatpak / timers / 開機載入器限 V10）· 考試中提供 man 手冊參考 · 本內容非 Red Hat 官方附屬。</div>
+</div>
+</body>
+</html>

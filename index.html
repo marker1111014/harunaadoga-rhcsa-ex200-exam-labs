@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RHCSA (EX200) 學習資源入口 — 繁體中文深度指南與速記重點</title>
+  <meta name="description" content="Red Hat RHCSA (EX200) 繁體中文備考指南入口網站，提供完整 14 章實機教學、單頁速記重點 (Cram Jam)、離線單檔版與指令即時檢索。">
+  <style>
+    :root {
+      --accent: #EE0000;
+      --accent-d: #b30000;
+      --nav: #1c1414;
+      --nav-2: #4a2020;
+      --ink: #1b2733;
+      --muted: #5b6b7b;
+      --line: #e2e8f0;
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --code-bg: #f0f3f6;
+      --good: #1a8a53;
+      --good-bg: #eefaf2;
+      --warn: #b4690e;
+      --warn-bg: #fff8ec;
+      --blue: #1166bb;
+      --blue-bg: #eef4fb;
+      --shadow: 0 2px 8px rgba(28, 20, 20, 0.06);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--nav);
+      color: #f3f4f6;
+      border-bottom: 1px solid #2f2222;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-badge {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: #d7dfe8;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-link.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .nav-link.primary:hover {
+      background: var(--accent-d);
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--nav) 0%, var(--nav-2) 100%);
+      color: #fff;
+      border-bottom: 4px solid var(--accent);
+      padding: 48px 24px 44px;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 3.6vw, 36px);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .hero-desc {
+      margin: 0;
+      max-width: 780px;
+      color: #e2e8f0;
+      font-size: 16px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 7px;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-d); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .metric-item {
+      background: rgba(0, 0, 0, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .metric-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .metric-val span { color: #ff8a8a; }
+    .metric-lbl {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 72px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 36px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+    }
+    .section-header:first-child { margin-top: 0; }
+    .section-header h2 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--nav);
+    }
+    .section-sub {
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    /* Quick Entry Cards */
+    .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .card-tag {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #fceded;
+      color: var(--accent-d);
+      width: fit-content;
+    }
+    .card-tag.alt { background: var(--blue-bg); color: var(--blue); }
+    .card-tag.good { background: var(--good-bg); color: var(--good); }
+    .card h3 {
+      margin: 6px 0 6px;
+      font-size: 18px;
+      color: var(--nav);
+    }
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+    .btn-sm {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+    .btn-sm:hover {
+      background: #e9eef3;
+      text-decoration: none;
+    }
+    .btn-sm.solid {
+      background: var(--nav);
+      color: #fff;
+      border-color: var(--nav);
+    }
+    .btn-sm.solid:hover {
+      background: var(--nav-2);
+    }
+    .btn-sm.red {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-sm.red:hover {
+      background: var(--accent-d);
+    }
+
+    /* Rule callout */
+    .rule-banner {
+      margin-top: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+    }
+    .rule-banner strong {
+      color: var(--accent-d);
+      display: block;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .rule-banner p {
+      margin: 0;
+      font-size: 14.5px;
+    }
+
+    /* Inline Reader Drawer / Panel */
+    .reader-shell {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+    .reader-toolbar {
+      background: var(--nav);
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .reader-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .reader-tab {
+      background: rgba(255, 255, 255, 0.1);
+      color: #d7dfe8;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .reader-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .reader-frame {
+      width: 100%;
+      height: 680px;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+
+    /* Search & Chapter Index */
+    .search-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(238, 0, 0, 0.12);
+    }
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-pill {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .filter-pill.active {
+      background: var(--nav);
+      border-color: var(--nav);
+      color: #fff;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 14px;
+    }
+    .topic-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .topic-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow);
+    }
+    .topic-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-d);
+    }
+    .topic-badge {
+      background: #f1f5f9;
+      color: var(--ink);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .topic-badge.v9 { background: #e0f2fe; color: #0369a1; }
+    .topic-badge.v10 { background: #fef3c7; color: #92400e; }
+    .topic-card h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--nav);
+    }
+    .topic-card p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .cmd-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .cmd-chip {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 12px;
+      background: var(--code-bg);
+      border: 1px solid #dde4ec;
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: #1e293b;
+    }
+    .topic-links {
+      margin-top: auto;
+      padding-top: 8px;
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Essential Command Quick-Copy */
+    .snippets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .snippet-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .snippet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .snippet-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--nav);
+    }
+    .copy-btn {
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: #e2e8f0; }
+    .copy-btn.copied {
+      background: var(--good-bg);
+      border-color: #9ae6b4;
+      color: var(--good);
+    }
+    pre.snippet-code {
+      margin: 0;
+      background: var(--code-bg);
+      border: 1px solid #dde4ec;
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+
+    /* File Table */
+    .file-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      font-size: 14px;
+    }
+    .file-table th {
+      background: var(--nav);
+      color: #fff;
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+    }
+    .file-table td {
+      padding: 10px 14px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+    .file-table tr:nth-child(even) td { background: #fafbfc; }
+    .mono {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 13px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 36px 20px;
+      background: var(--card);
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      color: var(--muted);
+    }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .hero { padding: 34px 18px; }
+      .container { padding: 24px 16px 56px; }
+      .reader-frame { height: 520px; }
+      .topic-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-group">
+        <span class="brand-badge">RED HAT · EX200</span>
+        <span class="brand-title">RHCSA 繁體中文學習資源中心</span>
+      </div>
+      <nav class="top-nav" aria-label="主要導覽">
+        <a class="nav-link" href="#reader-section">站內即時閱讀</a>
+        <a class="nav-link" href="#search-section">章節檢索</a>
+        <a class="nav-link" href="#commands-section">高頻指令</a>
+        <a class="nav-link" href="rhcsa/cram.html">⚡ 速記重點</a>
+        <a class="nav-link primary" href="rhcsa/index.html">進入完整指南</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Red Hat RHCSA (EX200) 繁體中文學習指南入口</h1>
+      <p class="hero-desc">
+        收錄完整的 Red Hat 認證系統管理員（EX200）深度學習手冊、單頁列印速記表（Cram Jam）與獨立離線單檔版。涵蓋 RHEL 9 (EX200V9) 與 RHEL 10 (EX200V10) 版本差異、實機操作流程、man 手冊定位策略與致命陷阱避坑清單。
+      </p>
+      <div class="hero-actions">
+        <a id="cta-full-guide" class="btn btn-primary" href="rhcsa/index.html">閱讀完整深度指南（14 章節）</a>
+        <a id="cta-cram-jam" class="btn btn-secondary" href="rhcsa/cram.html">開啟單頁速記重點 (Cram Jam)</a>
+        <button id="cta-open-reader" class="btn btn-secondary" type="button" onclick="scrollToReader('rhcsa/index.html')">在下方站內視窗閱讀</button>
+      </div>
+
+      <div class="metrics-bar" aria-label="考試重點指標">
+        <div class="metric-item">
+          <div class="metric-val"><span>100%</span> 實機操作</div>
+          <div class="metric-lbl">無選擇題 · 自動化評分腳本驗證系統狀態</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val"><span>3</span> 小時 / <span>210</span> 分</div>
+          <div class="metric-lbl">滿分 300 分（70% 及格）· 含一次免費補考</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">RHEL <span>9 &amp; 10</span></div>
+          <div class="metric-lbl">完整涵蓋 V9 Podman 容器與 V10 Flatpak/Timers</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val"><span>14</span> 章 + 速記表</div>
+          <div class="metric-lbl">含社群共識教材評析與 6～10 週複習計畫</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <section aria-labelledby="resources-heading">
+      <div class="section-header">
+        <h2 id="resources-heading">資源版本選擇</h2>
+        <span class="section-sub">支援線上瀏覽與離線單檔儲存</span>
+      </div>
+
+      <div class="entry-grid">
+        <article class="card">
+          <div>
+            <span class="card-tag">主要手冊</span>
+            <h3>完整深度學習指南</h3>
+            <p>包含核心總覽（V9/V10 差異、考核目標對照）與 14 大深度章節，附帶左側固定目錄與 Scrollspy 同步定位。</p>
+          </div>
+          <div class="card-actions">
+            <a id="open-guide-page" class="btn-sm red" href="rhcsa/index.html">開啟獨立頁面</a>
+            <button id="preview-guide-btn" class="btn-sm" type="button" onclick="loadInReader('rhcsa/index.html', this)">站內載入閱讀</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="card-tag alt">考前衝刺</span>
+            <h3>單頁速記重點 (Cram Jam)</h3>
+            <p>濃縮為三欄式指令回憶速查表，專門針對實機考場指令喚起設計，並內建橫向列印最佳化排版。</p>
+          </div>
+          <div class="card-actions">
+            <a id="open-cram-page" class="btn-sm solid" href="rhcsa/cram.html">開啟速記頁面</a>
+            <button id="preview-cram-btn" class="btn-sm" type="button" onclick="loadInReader('rhcsa/cram.html', this)">站內載入閱讀</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="card-tag good">單檔離線版</span>
+            <h3>Standalone 獨立 HTML 封裝版</h3>
+            <p>將 CSS 樣式與 JavaScript 全部內嵌於單一 HTML 檔案內，方便直接下載到本機或無網路實驗環境開啟。</p>
+          </div>
+          <div class="card-actions">
+            <a id="open-guide-standalone" class="btn-sm" href="rhcsa/index_standalone.html">完整指南單檔版</a>
+            <a id="open-cram-standalone" class="btn-sm" href="rhcsa/cram_standalone.html">速記重點單檔版</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="rule-banner">
+        <strong>貫穿整場考試的唯一最高鐵則</strong>
+        <p>「所有配置必須在重開機後依然生效，無需任何人工介入 (configurations must persist after reboot without intervention)。」任何當下能運作、但重開機後失效的設定一律得 0 分。</p>
+      </div>
+    </section>
+
+    <section id="search-section" aria-labelledby="search-heading">
+      <div class="section-header">
+        <h2 id="search-heading">章節與指令即時檢索</h2>
+        <span class="section-sub" id="result-count">顯示全部 20 個單元</span>
+      </div>
+
+      <div class="search-controls">
+        <div class="search-box">
+          <input id="search-input" class="search-input" type="search" placeholder="輸入關鍵字或指令快速定位（例如：SELinux、nmcli、lvextend、autofs、rd.break、podman、Flatpak）" aria-label="搜尋章節與指令">
+        </div>
+        <div class="filter-pills" role="group" aria-label="分類篩選">
+          <button id="filter-all" class="filter-pill active" type="button" data-filter="all">全部章節</button>
+          <button id="filter-overview" class="filter-pill" type="button" data-filter="overview">重點總覽</button>
+          <button id="filter-guide" class="filter-pill" type="button" data-filter="guide">實作技術章節</button>
+          <button id="filter-exam" class="filter-pill" type="button" data-filter="exam">計畫與避坑</button>
+        </div>
+      </div>
+
+      <div id="topic-grid" class="topic-grid"></div>
+    </section>
+
+    <section id="reader-section" aria-labelledby="reader-heading">
+      <div class="section-header">
+        <h2 id="reader-heading">站內即時閱讀器</h2>
+        <span class="section-sub">無需離開入口頁即可直接瀏覽完整內容</span>
+      </div>
+
+      <div class="reader-shell">
+        <div class="reader-toolbar">
+          <div class="reader-tabs" role="tablist" aria-label="切換閱讀檔案">
+            <button id="tab-guide" class="reader-tab active" type="button" onclick="loadInReader('rhcsa/index.html', this)">完整深度學習指南 (rhcsa/index.html)</button>
+            <button id="tab-cram" class="reader-tab" type="button" onclick="loadInReader('rhcsa/cram.html', this)">單頁速記重點 (rhcsa/cram.html)</button>
+            <button id="tab-guide-standalone" class="reader-tab" type="button" onclick="loadInReader('rhcsa/index_standalone.html', this)">指南單檔版</button>
+            <button id="tab-cram-standalone" class="reader-tab" type="button" onclick="loadInReader('rhcsa/cram_standalone.html', this)">速記單檔版</button>
+          </div>
+          <a id="reader-external-link" class="nav-link" href="rhcsa/index.html" target="_blank" rel="noopener">在新視窗開啟當前頁面 ↗</a>
+        </div>
+        <iframe id="reader-frame" class="reader-frame" src="rhcsa/index.html" title="RHCSA 學習指南閱讀視窗"></iframe>
+      </div>
+    </section>
+
+    <section id="commands-section" aria-labelledby="commands-heading">
+      <div class="section-header">
+        <h2 id="commands-heading">考試保命指令快速複製</h2>
+        <span class="section-sub">高頻容易遺忘的持久化與驗證指令</span>
+      </div>
+
+      <div class="snippets-grid">
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">1 · SELinux 永久標籤與套用</span>
+            <button id="copy-selinux" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">semanage fcontext -a -t httpd_sys_content_t '/web(/.*)?'
+restorecon -Rv /web</pre>
+        </div>
+
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">2 · 修改 fstab 後強制驗證</span>
+            <button id="copy-fstab" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">mount -a
+findmnt --verify
+lsblk -f</pre>
+        </div>
+
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">3 · nmcli 靜態網路設定與啟用</span>
+            <button id="copy-nmcli" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">nmcli con add con-name lab type ethernet ifname enp1s0 \
+  ipv4.method manual ipv4.addresses 192.168.1.10/24 \
+  ipv4.gateway 192.168.1.1 ipv4.dns 192.168.1.1
+nmcli con up lab</pre>
+        </div>
+
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">4 · 重設 root 密碼（rd.break）</span>
+            <button id="copy-root" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">mount -o remount,rw /sysroot
+chroot /sysroot
+passwd root
+touch /.autorelabel
+exit && exit</pre>
+        </div>
+
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">5 · firewalld 永久規則與重載</span>
+            <button id="copy-fw" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --reload
+firewall-cmd --list-all</pre>
+        </div>
+
+        <div class="snippet-card">
+          <div class="snippet-head">
+            <span class="snippet-title">6 · LVM 建立與含檔案系統自動擴充</span>
+            <button id="copy-lvm" class="copy-btn" type="button" onclick="copySnippet(this)">複製</button>
+          </div>
+          <pre class="snippet-code">pvcreate /dev/sdb1
+vgcreate vgdata /dev/sdb1
+lvcreate -n lvdata -L 500M vgdata
+lvextend -r -L +500M /dev/vgdata/lvdata</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="files-section" aria-labelledby="files-heading">
+      <div class="section-header">
+        <h2 id="files-heading">倉庫檔案目錄總覽</h2>
+        <span class="section-sub">壓縮包解壓內容與入口頁面結構</span>
+      </div>
+
+      <table class="file-table">
+        <thead>
+          <tr>
+            <th>檔案路徑</th>
+            <th>用途說明</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">index.html</span></td>
+            <td>專案根目錄入口首頁，提供全文搜尋、站內即時閱讀器與高頻指令複製功能</td>
+            <td>當前頁面</td>
+          </tr>
+          <tr>
+            <td><span class="mono">rhcsa/index.html</span></td>
+            <td>RHCSA (EX200) 繁體中文完整深度學習指南（連結共用樣式與 Scrollspy 腳本）</td>
+            <td><a href="rhcsa/index.html">開啟頁面</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">rhcsa/cram.html</span></td>
+            <td>RHCSA (EX200) 單頁速記重點 (Cram Jam)，支援三欄速查與列印模式</td>
+            <td><a href="rhcsa/cram.html">開啟頁面</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">rhcsa/index_standalone.html</span></td>
+            <td>完整學習指南單檔離線版（CSS 與 JS 內嵌於單一檔案）</td>
+            <td><a href="rhcsa/index_standalone.html">開啟頁面</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">rhcsa/cram_standalone.html</span></td>
+            <td>單頁速記重點單檔離線版（CSS 內嵌於單一檔案）</td>
+            <td><a href="rhcsa/cram_standalone.html">開啟頁面</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">assets/style.css</span></td>
+            <td>深度指南共用樣式表（支援 Red Hat 紅黑主題與響應式側欄）</td>
+            <td><a href="assets/style.css">檢視原始檔</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">assets/cram.css</span></td>
+            <td>單頁速記表共用樣式表（含 Landscape 列印樣式）</td>
+            <td><a href="assets/cram.css">檢視原始檔</a></td>
+          </tr>
+          <tr>
+            <td><span class="mono">assets/scrollspy.js</span></td>
+            <td>側邊欄目錄與頁面捲動位置的自動追蹤腳本</td>
+            <td><a href="assets/scrollspy.js">檢視原始檔</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>RHCSA (EX200) 繁體中文學習資源庫 · 適用 RHEL 9 與 RHEL 10</span>
+    <span>本指南整理自官方公開考核大綱與社群備考心得，非 Red Hat 官方附屬產品</span>
+  </footer>
+
+  <script>
+    const TOPICS = [
+      {
+        id: 'ov-intro',
+        cat: 'overview',
+        group: '重點總覽',
+        title: '認證介紹與核心價值 (What & Why)',
+        desc: '驗證在 RHEL 上執行核心系統管理的能力，與「重開機後配置仍須完全生效」的最高考試鐵則。',
+        cmds: ['man', '--help', '/usr/share/doc']
+      },
+      {
+        id: 'ov-version',
+        cat: 'overview',
+        group: '重點總覽',
+        badge: 'V9 / V10',
+        badgeClass: 'v10',
+        title: 'RHEL 9 vs RHEL 10 版本差異',
+        desc: 'EX200V9 包含 Podman 容器；EX200V10 移除容器與 MBR，新增 Flatpak、systemd timer 與 Bootloader 修改。',
+        cmds: ['podman', 'flatpak', 'systemd.timer', 'grubby']
+      },
+      {
+        id: 'ov-glance',
+        cat: 'overview',
+        group: '重點總覽',
+        title: '考試重點一覽 (Exam at a Glance)',
+        desc: '3 小時 100% 實機操作、210/300 及格門檻、$500 含一次免費補考、遠端 Live USB 與實體考場說明。',
+        cmds: ['man semanage-fcontext', 'man 5 fstab', 'man 5 crontab']
+      },
+      {
+        id: 'ov-objectives',
+        cat: 'overview',
+        group: '重點總覽',
+        title: '官方考核目標與章節對照',
+        desc: '將 Red Hat 官方十大技能分類直接對應至本指南 §2 到 §11 實作章節。',
+        cmds: ['EX200V9', 'EX200V10']
+      },
+      {
+        id: 'ov-materials',
+        cat: 'overview',
+        group: '重點總覽',
+        title: '推薦教材 (社群高度共識)',
+        desc: 'Sander van Vugt + Asghar Ghori + 2 台免費 Red Hat Developer 虛擬機實驗室 + Lisenet 模擬題。',
+        cmds: ['O\'Reilly', 'Lisenet', 'Red Hat Developer']
+      },
+      {
+        id: 'ov-plan',
+        cat: 'overview',
+        group: '重點總覽',
+        title: '快速學習計畫 (Quick Version)',
+        desc: '第一天建立實驗室、關閉筆記盲打、每次做完立刻重開機驗證、計時 3 小時全真模擬。',
+        cmds: ['Active Retrieval', 'Reboot Verification']
+      },
+      {
+        id: 't-exam',
+        cat: 'exam',
+        group: '§1 · 考試與評分',
+        title: '1 · 考試詳情與評分機制',
+        desc: '自動化評分腳本邏輯、部分給分規則、系統無法開機將全題 0 分，以及遠端監考注意事項。',
+        cmds: ['man', '--help', '/usr/share/doc', 'man lvcreate']
+      },
+      {
+        id: 't-tools',
+        cat: 'guide',
+        group: '§2 · 基礎工具',
+        title: '2 · 核心工具與文字處理',
+        desc: 'I/O 重新導向、grep 正規表示式、tar 打包壓縮、硬連結 vs 軟連結、find -exec 搜尋、chmod/chown 與 ssh/scp/rsync。',
+        cmds: ['grep -ivrE', 'tar -czf', 'find -exec', 'ln -s', 'rsync -av']
+      },
+      {
+        id: 't-scripts',
+        cat: 'guide',
+        group: '§3 · Shell 腳本',
+        title: '3 · Shell 腳本撰寫 (Bash)',
+        desc: 'Shebang 與執行權限、位置參數 $1/$@/$#/$?、if 條件判斷旗標 (-f/-d/-z)、for/while 迴圈與指令替換 $(cmd)。',
+        cmds: ['#!/bin/bash', 'chmod +x', '$1', '$?', 'if [ -f ]']
+      },
+      {
+        id: 't-operate',
+        cat: 'guide',
+        group: '§4 · 系統操作',
+        title: '4 · 運作中系統操作（開機/程序/日誌/服務）',
+        desc: 'systemd target 切換、GRUB rd.break 重設 root 密碼（含 /.autorelabel）、ps/kill/nice、tuned-adm 與持久化 journald。',
+        cmds: ['rd.break', 'touch /.autorelabel', 'tuned-adm', 'journalctl', 'systemctl enable --now']
+      },
+      {
+        id: 't-storage',
+        cat: 'guide',
+        group: '§5 · 本地儲存',
+        title: '5 · 本地儲存 — 分割區、LVM、Swap',
+        desc: 'parted GPT 分割、PV/VG/LV 建置與 lvextend -r 自動放大檔案系統、XFS 無法縮減規則與 Swap 持久化掛載。',
+        cmds: ['parted', 'pvcreate', 'vgcreate', 'lvcreate', 'lvextend -r', 'xfs_growfs', 'mkswap']
+      },
+      {
+        id: 't-fs',
+        cat: 'guide',
+        group: '§6 · 檔案系統',
+        title: '6 · 檔案系統、NFS 與 autofs 自動掛載',
+        desc: 'mkfs.xfs/ext4/vfat、blkid UUID 與 fstab、mount -a/findmnt --verify 驗證、autofs 直接/間接/萬用字元掛載、SGID 與 ACL。',
+        cmds: ['blkid', 'mount -a', 'findmnt --verify', 'autofs', 'setfacl', 'chmod 2770']
+      },
+      {
+        id: 't-deploy',
+        cat: 'guide',
+        group: '§7 · 部署維護',
+        badge: 'V10 更新',
+        badgeClass: 'v10',
+        title: '7 · 系統部署、配置與維護',
+        desc: 'cron/at/systemd timer 排程、chrony 時間同步、dnf provides、手寫 BaseOS + AppStream .repo 檔、V10 Flatpak 與 GRUB 開機載入器。',
+        cmds: ['crontab -e', 'at', 'chronyc sources -v', 'dnf provides', 'flatpak', 'grubby']
+      },
+      {
+        id: 't-network',
+        cat: 'guide',
+        group: '§8 · 網路管理',
+        title: '8 · 基礎網路管理 (nmcli)',
+        desc: 'nmcli 一行建立/修改靜態 IPv4/IPv6 連線、務必執行 nmcli con up 啟用、hostnamectl 主機名稱設定與持久化驗證。',
+        cmds: ['nmcli con add', 'nmcli con mod', 'nmcli con up', 'hostnamectl']
+      },
+      {
+        id: 't-users',
+        cat: 'guide',
+        group: '§9 · 使用者權限',
+        title: '9 · 使用者與群組權限管理',
+        desc: 'useradd/groupadd、usermod -aG 務必加 -a 避免清空群組、chage 密碼期限與帳號過期、sudoers.d 與 visudo -cf 語法驗證。',
+        cmds: ['useradd', 'usermod -aG', 'chage', 'visudo -cf', '/etc/login.defs']
+      },
+      {
+        id: 't-security',
+        cat: 'guide',
+        group: '§10 · 安全防護',
+        title: '10 · 安全防護 — firewalld、umask、SSH 金鑰、SELinux',
+        desc: 'firewall-cmd --permanent 與 --reload、umask 計算、SSH 金鑰權限、semanage fcontext + restorecon、setsebool -P 與 AVC 排查。',
+        cmds: ['firewall-cmd', 'umask', 'ssh-copy-id', 'semanage fcontext', 'restorecon -Rv', 'setsebool -P', 'ausearch']
+      },
+      {
+        id: 't-containers',
+        cat: 'guide',
+        group: '§11 · 容器管理',
+        badge: '僅限 V9',
+        badgeClass: 'v9',
+        title: '11 · 使用 Podman 管理容器 (EX200V9)',
+        desc: 'podman pull/build/run、掛載目錄 :Z 標籤、Rootless 非特權埠限制、loginctl enable-linger 與 podman generate systemd。',
+        cmds: ['podman run', 'skopeo inspect', ':Z', 'loginctl enable-linger', 'podman generate systemd']
+      },
+      {
+        id: 't-materials',
+        cat: 'exam',
+        group: '§12 · 教材評析',
+        title: '12 · 完整學習資源評析',
+        desc: '整合 Reddit 30+ 考生經驗的教材排名（van Vugt、Ghori、Beanologi、Lisenet、開源實驗環境）與雙虛擬機自建規格。',
+        cmds: ['van Vugt', 'Asghar Ghori', 'Lisenet', 'aggressiveHiker/rhcsa9']
+      },
+      {
+        id: 't-plan',
+        cat: 'exam',
+        group: '§13 · 複習計畫',
+        title: '13 · 高成效複習計畫（6～10 週）',
+        desc: '結合生成效應、主動回憶、間隔重複與交叉練習的分週執行表，以及隨時可報考的檢驗標準。',
+        cmds: ['第1週環境', '第2-3週儲存', '第4-5週安全', '第6週全真模擬']
+      },
+      {
+        id: 't-tips',
+        cat: 'exam',
+        group: '§14 · 應試策略',
+        title: '14 · 應試技巧與避坑指南',
+        desc: '開考前瀏覽題目、SSH 免密設定、Ctrl+[ 替代 Esc、最後 20 分鐘重開機全檢，以及 10 大直接 0 分致命陷阱。',
+        cmds: ['Ctrl+[', 'mount -a', 'enable --now', '--permanent --reload', 'touch /.autorelabel']
+      }
+    ];
+
+    let activeFilter = 'all';
+
+    function renderTopics() {
+      const query = document.getElementById('search-input').value.trim().toLowerCase();
+      const grid = document.getElementById('topic-grid');
+      const countEl = document.getElementById('result-count');
+
+      const filtered = TOPICS.filter(item => {
+        const matchesCat = activeFilter === 'all' || item.cat === activeFilter;
+        if (!matchesCat) return false;
+        if (!query) return true;
+        const haystack = [
+          item.group,
+          item.title,
+          item.desc,
+          item.badge || '',
+          ...(item.cmds || [])
+        ].join(' ').toLowerCase();
+        return haystack.includes(query);
+      });
+
+      countEl.textContent = filtered.length === TOPICS.length
+        ? `顯示全部 ${TOPICS.length} 個單元`
+        : `符合條件：${filtered.length} / ${TOPICS.length} 個單元`;
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty-state">找不到符合「<strong>${escapeHtml(query)}</strong>」的章節或指令，請嘗試其他關鍵字（例如 <code>lvm</code>、<code>selinux</code>、<code>nmcli</code>、<code>autofs</code>）。</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <article class="topic-card">
+          <div class="topic-meta">
+            <span>${escapeHtml(item.group)}</span>
+            ${item.badge ? `<span class="topic-badge ${item.badgeClass || ''}">${escapeHtml(item.badge)}</span>` : ''}
+          </div>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.desc)}</p>
+          <div class="cmd-list">
+            ${(item.cmds || []).map(c => `<span class="cmd-chip">${escapeHtml(c)}</span>`).join('')}
+          </div>
+          <div class="topic-links">
+            <a href="rhcsa/index.html#${item.id}">直接開啟章節 →</a>
+            <a href="#reader-section" onclick="jumpReaderTo('${item.id}'); return true;">在站內閱讀器定位</a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function loadInReader(src, triggerBtn) {
+      const frame = document.getElementById('reader-frame');
+      const extLink = document.getElementById('reader-external-link');
+      frame.src = src;
+      extLink.href = src;
+
+      document.querySelectorAll('.reader-tab').forEach(btn => btn.classList.remove('active'));
+      if (triggerBtn && triggerBtn.classList.contains('reader-tab')) {
+        triggerBtn.classList.add('active');
+      } else {
+        const matchingTab = Array.from(document.querySelectorAll('.reader-tab'))
+          .find(t => (t.getAttribute('onclick') || '').includes(src.split('#')[0]));
+        if (matchingTab) matchingTab.classList.add('active');
+      }
+    }
+
+    function scrollToReader(src) {
+      loadInReader(src);
+      document.getElementById('reader-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function jumpReaderTo(sectionId) {
+      loadInReader(`rhcsa/index.html#${sectionId}`, document.getElementById('tab-guide'));
+    }
+
+    function copySnippet(btn) {
+      const pre = btn.closest('.snippet-card').querySelector('.snippet-code');
+      const text = pre.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => markCopied(btn));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        markCopied(btn);
+      }
+    }
+
+    function markCopied(btn) {
+      const orig = btn.textContent;
+      btn.textContent = '已複製';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 1600);
+    }
+
+    document.getElementById('search-input').addEventListener('input', renderTopics);
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeFilter = pill.dataset.filter;
+        renderTopics();
+      });
+    });
+
+    renderTopics();
+  </script>
+</body>
+</html>

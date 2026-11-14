@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Hat RHCSA (EX200) — 考試深度學習指南</title>
+<style>
+/* ============================================================
+   Shared study-guide stylesheet
+   Per-cert theming via body class: theme-aws (default),
+   theme-splunk, theme-splunk-admin, theme-security, theme-azure,
+   theme-terraform, theme-redhat, theme-aws-clf, theme-aws-scs,
+   theme-anthropic
+   ============================================================ */
+:root{
+  --accent:#FF9900;      /* primary brand accent */
+  --accent-d:#EC7211;
+  --nav:#232F3E;         /* sidebar + hero base */
+  --nav-2:#31465f;       /* hero gradient end */
+  --nav-line:#11202f;
+  --nav-sub:#8fa2b6;
+  --nav-link:#c3cedb;
+
+  --ink:#1b2733;
+  --muted:#5b6b7b;
+  --line:#e2e8f0;
+  --bg:#f6f8fa;
+  --card:#ffffff;
+  --accent-blue:#1166bb;
+  --good:#1a8a53;
+  --warn:#b4690e;
+  --bad:#c0392b;
+  --code-bg:#f0f3f6;
+  --sidebar-w:310px;
+}
+/* Vendor brand hex: AWS #FF9900 (Smile Orange), Splunk #65A637.
+   All AWS certs share the AWS palette; all Splunk certs share the Splunk palette. */
+body.theme-splunk       { --accent:#65A637; --accent-d:#4F8C2B; --nav:#14181b; --nav-2:#28382c; }
+body.theme-security { --accent:#E02B34; --accent-d:#b81f27; --nav:#182a3f; --nav-2:#2b4a6b; }
+body.theme-azure    { --accent:#0A84D4; --accent-d:#005a9e; --nav:#1f334f; --nav-2:#345183; }
+body.theme-terraform{ --accent:#8850CF; --accent-d:#6b3aa0; --nav:#241539; --nav-2:#442c66; }
+body.theme-redhat   { --accent:#EE0000; --accent-d:#b30000; --nav:#1c1414; --nav-2:#4a2020; }
+body.theme-aws-clf      { --accent:#FF9900; --accent-d:#EC7211; --nav:#232F3E; --nav-2:#31465f; }
+body.theme-aws-scs      { --accent:#FF9900; --accent-d:#EC7211; --nav:#232F3E; --nav-2:#31465f; }
+body.theme-splunk-admin { --accent:#65A637; --accent-d:#4F8C2B; --nav:#14181b; --nav-2:#28382c; }
+body.theme-anthropic    { --accent:#D97757; --accent-d:#b85c3f; --nav:#2b1a14; --nav-2:#4a2c20; }
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.6;font-size:16px;
+}
+a{color:var(--accent-blue);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---------- Layout ---------- */
+.layout{display:flex;align-items:flex-start;}
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;position:sticky;top:0;
+  overflow-y:auto;background:var(--nav);color:#cfd8e3;padding:0 0 40px 0;border-right:1px solid var(--nav-line);
+}
+.sidebar::-webkit-scrollbar{width:9px;}
+.sidebar::-webkit-scrollbar-thumb{background:#46586c;border-radius:8px;}
+.sidebar::-webkit-scrollbar-track{background:transparent;}
+.brand{padding:20px 22px 16px 22px;border-bottom:1px solid #33465b;position:sticky;top:0;background:var(--nav);z-index:3;}
+.brand .logo{display:inline-block;background:var(--accent);color:#fff;font-weight:800;font-size:12px;letter-spacing:.5px;
+  padding:3px 8px;border-radius:4px;margin-bottom:8px;}
+.brand h1{font-size:15px;margin:6px 0 2px 0;color:#fff;line-height:1.3;}
+.brand .sub{font-size:12px;color:var(--nav-sub);}
+.brand .home{font-size:12px;display:inline-block;margin-top:8px;color:#aeb9c7;}
+.brand .home:hover{color:#fff;}
+
+.toc{padding:10px 0;}
+.toc .group-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent);
+  padding:14px 22px 6px 22px;font-weight:700;}
+.toc a{display:block;color:var(--nav-link);padding:6px 22px;font-size:13.5px;border-left:3px solid transparent;
+  text-decoration:none;transition:all .12s ease;}
+.toc a:hover{background:#2c3a4b;color:#fff;text-decoration:none;}
+.toc a.lvl2{padding-left:36px;font-size:12.7px;color:#a8b6c6;}
+.toc a.lvl3{padding-left:50px;font-size:12.3px;color:#93a2b4;}
+.toc a.active{background:#2c3a4b;color:#fff;border-left:3px solid var(--accent);font-weight:600;}
+
+.content{flex:1;min-width:0;padding:0 48px 120px 48px;max-width:1080px;margin:0 auto;}
+.hero{background:linear-gradient(135deg,var(--nav) 0%,var(--nav-2) 100%);color:#fff;margin:0 -48px 34px -48px;
+  padding:46px 48px 40px 48px;border-bottom:4px solid var(--accent);}
+.hero h1{margin:0 0 8px 0;font-size:30px;line-height:1.2;}
+.hero p{margin:6px 0 0 0;color:#d4deea;max-width:820px;}
+.hero .pill{display:inline-block;margin-top:18px;margin-right:8px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:13px;}
+.hero .pill b{color:var(--accent);}
+.hero .crambtn{display:inline-block;margin-top:18px;background:var(--accent);color:#fff;font-weight:700;
+  padding:8px 16px;border-radius:6px;font-size:14px;}
+.hero .crambtn:hover{background:var(--accent-d);text-decoration:none;}
+
+section{scroll-margin-top:18px;}
+h2.part{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-d);
+  border-top:2px solid var(--accent);padding-top:10px;margin-top:54px;font-weight:800;}
+h2{font-size:25px;margin:40px 0 12px 0;padding-bottom:8px;border-bottom:2px solid var(--line);scroll-margin-top:18px;}
+h3{font-size:20px;margin:32px 0 10px 0;color:var(--nav);scroll-margin-top:18px;}
+h4{font-size:16.5px;margin:22px 0 6px 0;color:var(--nav);}
+p{margin:10px 0;}
+ul,ol{margin:10px 0;padding-left:24px;}
+li{margin:5px 0;}
+code{background:var(--code-bg);border:1px solid #dde4ec;border-radius:4px;padding:1px 5px;font-size:13.5px;
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#334;}
+pre{background:var(--code-bg);border:1px solid #dde4ec;border-left:3px solid var(--accent);border-radius:6px;
+  padding:11px 14px;margin:14px 0;overflow-x:auto;font-size:13px;line-height:1.5;
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#2a3644;}
+pre code{background:none;border:none;padding:0;font-size:inherit;}
+
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.2px;background:var(--card);
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+th{background:var(--nav);color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px;}
+td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top;}
+tr:nth-child(even) td{background:#fafbfc;}
+table code{font-size:12.8px;}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;
+  box-shadow:0 1px 2px rgba(16,24,40,.04);}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin:18px 0;}
+.grid .card{margin:0;}
+.grid .card h4{margin-top:0;}
+
+.callout{border-left:4px solid var(--accent);background:#fff8ec;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;}
+.callout.tip{border-left-color:var(--good);background:#eefaf2;}
+.callout.trap{border-left-color:var(--bad);background:#fdeeec;}
+.callout.note{border-left-color:var(--accent-blue);background:#eef4fb;}
+.callout .lbl{font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:2px;color:var(--accent-d);}
+.callout.tip .lbl{color:var(--good);}
+.callout.trap .lbl{color:var(--bad);}
+.callout.note .lbl{color:var(--accent-blue);}
+
+.domain-band{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;}
+.domain-band .db{flex:1;min-width:170px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);
+  border-radius:10px;padding:14px 16px;}
+.domain-band .db .pct{font-size:26px;font-weight:800;color:var(--nav);}
+.domain-band .db .nm{font-size:13.5px;color:var(--muted);}
+
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+.tag.d1{background:#fde8cf;color:#8a4b00;}
+.tag.d2{background:#d6ecfa;color:#0b4d75;}
+.tag.d3{background:#e2f4e5;color:#1a6b38;}
+.tag.d4{background:#efe4f7;color:#5f2c86;}
+.tag.d5{background:#fbe0e4;color:#9c1b2b;}
+
+.backtop{font-size:12px;color:var(--muted);margin-top:8px;display:inline-block;}
+.jump{font-size:12.5px;background:#fff4e2;border:1px solid #ffdca8;color:#8a4b00;padding:2px 9px;border-radius:20px;display:inline-block;margin:2px 0;}
+.jump:hover{background:#ffe9c9;text-decoration:none;}
+.kbd{font-size:12px;color:var(--muted);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:1100px){.two-col{grid-template-columns:1fr;}}
+.legend{font-size:12.5px;color:var(--muted);margin:6px 0 0 0;}
+.star{color:var(--accent);}
+hr.soft{border:none;border-top:1px dashed var(--line);margin:30px 0;}
+.rank{display:inline-block;background:var(--accent);color:#fff;font-weight:800;border-radius:6px;padding:1px 8px;font-size:12px;margin-right:6px;}
+.consensus{background:#eefaf2;border:1px solid #bfe6cd;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:14px;}
+.consensus b{color:var(--good);}
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+
+@media(max-width:900px){
+  .layout{flex-direction:column;}
+  .sidebar{position:relative;width:100%;min-width:0;height:auto;border-right:none;}
+  .content{padding:0 20px 80px 20px;}
+  .hero{margin:0 -20px 24px -20px;padding:32px 20px;}
+  .two-col{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+<body class="theme-redhat">
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">RED HAT · EX200</span>
+      <h1>RHCSA — 紅帽認證系統管理員</h1>
+      <div class="sub">核心總覽 ＋ 深度備考指南</div>
+      <a class="home" href="../index.html">← 所有認證指南</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ 速記重點 (Cram Jam)</a>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">重點總覽 (Overview)</div>
+      <a href="#ov-intro">認證介紹與核心價值</a>
+      <a href="#ov-version">RHEL 9 vs RHEL 10 版本差異</a>
+      <a href="#ov-glance">考試重點一覽</a>
+      <a href="#ov-objectives">考核目標與章節對照</a>
+      <a href="#ov-materials">推薦教材 (社群共識)</a>
+      <a href="#ov-plan">快速學習計畫 (Quick)</a>
+
+      <div class="group-label">深度學習指南 (Thorough Guide)</div>
+      <a href="#t-exam">1 · 考試詳情與環境規範</a>
+      <a href="#t-tools">2 · 核心工具與文字處理</a>
+      <a href="#t-scripts">3 · Shell 腳本撰寫</a>
+      <a href="#t-operate">4 · 運作中系統操作（開機/程序/日誌/服務）</a>
+      <a href="#t-storage">5 · 本地儲存（分割區、LVM、Swap）</a>
+      <a href="#t-fs">6 · 檔案系統、NFS 與 autofs</a>
+      <a href="#t-deploy">7 · 系統部署、配置與維護</a>
+      <a href="#t-network">8 · 基礎網路管理（nmcli）</a>
+      <a href="#t-users">9 · 使用者與群組權限管理</a>
+      <a href="#t-security">10 · 安全防護（SELinux、firewalld）</a>
+      <a href="#t-containers">11 · 容器管理（EX200V9 專屬）</a>
+      <a href="#t-materials">12 · 完整學習資源評析</a>
+      <a href="#t-plan">13 · 高成效複習計畫（6～10 週）</a>
+      <a href="#t-tips">14 · 應試技巧與避坑指南</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>紅帽認證系統管理員 (RHCSA)</h1>
+      <p><b>EX200 考試。</b>與本網站上的其他所有認證不同，RHCSA 是一門 <b>100% 實機操作</b>的考試：在真實的 RHEL 系統上進行三個小時的實際任務操作——完全沒有選擇題，最終由自動化評分腳本檢驗你的機器配置狀態。它是證明你具備真實 Linux 管理能力的黃金標準，也是通往 RHCE 及整個 Red Hat 認證體系的基石。</p>
+      <span class="pill"><b>100%</b> 實機操作實驗</span>
+      <span class="pill"><b>3</b> 小時</span>
+      <span class="pill">及格分 <b>210</b>/300</span>
+      <span class="pill"><b>$500</b> 美元</span>
+      <span class="pill">含一次免費補考</span>
+      <span class="pill">效期 <b>3 年</b></span>
+      <div><a class="crambtn" href="cram.html">⚡ 開啟單頁速記重點 (Cram Jam)</a></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <h2 class="part">第一部分 — 核心總覽 (High-Level Overview)</h2>
+
+    <section id="ov-intro">
+      <h2>認證介紹與核心價值 (What &amp; Why)</h2>
+      <p><b>RHCSA</b> 旨在驗證您是否具備在 Red Hat Enterprise Linux 上執行 Linux 系統管理員核心任務的能力——包括管理使用者、儲存空間、檔案系統、網路、安全防護（SELinux / firewalld）、系統服務以及軟體套件——<b>全程親手操作、面對時間壓力，且僅有 man 線上手冊可供參考</b>。由於這門考試無法靠死背答案通過，因此企業普遍將其視為當今最具公信力與含金量的初中階基礎架構認證之一。</p>
+      <div class="callout note"><span class="lbl">貫穿整場考試的唯一最高鐵則</span> 引用 Red Hat 官方原話：<b>「所有配置必須在重開機後依然生效，無需任何人工介入 (configurations must persist after reboot without intervention)。」</b> 任何當下能運作、但重開機後失效的設定，一律得 0 分。因此本指南中的每個主題，最終目的都是「……並確保在重開機後依然完好生效」。</div>
+    </section>
+
+    <section id="ov-version">
+      <h2>⚠️ RHEL 9 vs RHEL 10 — 請確認您報考的版本</h2>
+      <div class="callout"><span class="lbl">版本分流 (2026)</span> 官方 EX200 頁面現已註明考試<b>以 RHEL 10 為基礎</b>。但 RHEL 9 版本 (EX200V9) 在退場過渡期內可能仍可供選擇——<b>預約考試時需自行勾選版本，因此請在備考前確認您報考的版本</b>。截至目前，社群中大多數考取經驗回報仍是以 RHEL 9 為主。兩者約有 85–90% 的內容完全相同，其主要差異如下：</div>
+      <table>
+        <tr><th>項目</th><th>EX200V9 (RHEL 9)</th><th>EX200V10 (RHEL 10)</th></tr>
+        <tr><td><b>容器 (Containers)</b></td><td>✔ 包含 Podman 考核目標（執行、註冊為 systemd 服務、持久化儲存）</td><td><b>已完全移除</b></td></tr>
+        <tr><td><b>軟體套件管理</b></td><td>dnf + 套件庫 (包含 modularity 模組)</td><td>全新「管理軟體」分類新增 <b>Flatpak</b>；移除 dnf modularity</td></tr>
+        <tr><td><b>排程任務</b></td><td>at + cron</td><td>at + cron + <b>systemd timer 定時器單元</b></td></tr>
+        <tr><td><b>V10 其他變動</b></td><td>—</td><td><b>修改系統開機載入器 (Bootloader)</b>；僅支援 GPT 分割（已移除 MBR）</td></tr>
+      </table>
+      <p>本指南完整涵蓋<b>兩者</b>：所有共同考核項目，以及專屬於 V9 容器的 §11，並在 §7 內文中註記 V10 新增重點（Flatpak、timers、開機載入器）。</p>
+    </section>
+
+    <section id="ov-glance">
+      <h2>考試重點一覽 (Exam at a Glance)</h2>
+      <table>
+        <tr><th>項目</th><th>詳細說明</th></tr>
+        <tr><td>考試代碼</td><td>EX200 (RHCSA)</td></tr>
+        <tr><td>考試形式</td><td><b>上機實機操作實驗 (Performance-based Lab)</b> — 無任何選擇題；由自動化評分腳本依據系統最終狀態判定成績</td></tr>
+        <tr><td>考試時間</td><td>3 小時（預約時請再次確認）</td></tr>
+        <tr><td>及格分數</td><td><b>210 / 300</b> (70%)</td></tr>
+        <tr><td>考試費用</td><td>$500 美元（因地區而異）；個人考試包含<b>一次免費補考機會</b>（需於購買後 1 年內使用；實體課堂隨堂考試除外）</td></tr>
+        <tr><td>考試方式</td><td>線上遠端測驗（使用自備 x86_64 電腦透過 Red Hat Live USB 開機、真人考官線上監考、考前 2～3 天需完成硬體相容性測試）· 實體測驗中心 Kiosk 機台 · 官方實體訓練課程後隨堂考試</td></tr>
+        <tr><td>允許參考資源</td><td>禁止使用網際網路、禁止攜帶任何筆記。<b>系統內建的 man 手冊、<code>--help</code>、info 以及 <code>/usr/share/doc</code> 均可自由查閱</b> — 務必學會從中挖掘範例與語法。</td></tr>
+        <tr><td>先備條件</td><td>無強制要求（建議具備 RH124 + RH134、RH199 課程程度或等同的 Linux 實務經驗）</td></tr>
+        <tr><td>成績公布與效期</td><td>透過 Email 發送通過/未通過結果以及各類別得分百分比（通常於數小時內寄達，官方保證 ≤3 個工作天內）· 證照效期 3 年</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ 深入研讀：§1 考試詳情與評分機制</a></p>
+    </section>
+
+    <section id="ov-objectives">
+      <h2>考核目標與章節對照</h2>
+      <p>Red Hat 官方未公布各主題配分比重 — 任何類別都有可能出現。官方技能分類與本指南各章節對應如下：</p>
+      <table>
+        <tr><th>官方考核類別</th><th>對應深度章節</th></tr>
+        <tr><td>理解並使用必備工具 (Understand and use essential tools)</td><td><a class="jump" href="#t-tools">→ §2</a></td></tr>
+        <tr><td>建立簡易 Shell 腳本 (Create simple shell scripts)</td><td><a class="jump" href="#t-scripts">→ §3</a></td></tr>
+        <tr><td>運作中系統操作：開機、行程、日誌、服務 (Operate running systems)</td><td><a class="jump" href="#t-operate">→ §4</a></td></tr>
+        <tr><td>設定本地儲存：分割區、LVM、Swap (Configure local storage)</td><td><a class="jump" href="#t-storage">→ §5</a></td></tr>
+        <tr><td>建立與設定檔案系統：xfs/ext4/vfat、NFS、autofs (Create and configure file systems)</td><td><a class="jump" href="#t-fs">→ §6</a></td></tr>
+        <tr><td>部署、設定與維護系統：排程、服務、時間、軟體 (Deploy, configure, maintain) <span class="tag d1">V10 包含 Flatpak/timers/bootloader</span></td><td><a class="jump" href="#t-deploy">→ §7</a></td></tr>
+        <tr><td>管理基本網路功能：nmcli、主機名稱、防火牆 (Manage basic networking)</td><td><a class="jump" href="#t-network">→ §8</a></td></tr>
+        <tr><td>管理使用者與群組 (Manage users and groups)</td><td><a class="jump" href="#t-users">→ §9</a></td></tr>
+        <tr><td>管理安全防護：firewalld、umask、SSH 金鑰、SELinux (Manage security)</td><td><a class="jump" href="#t-security">→ §10</a></td></tr>
+        <tr><td>管理容器：Podman (Manage containers) <span class="tag d2">僅限 V9</span></td><td><a class="jump" href="#t-containers">→ §11</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-materials">
+      <h2>推薦學習教材 <span class="kbd">(社群高度共識)</span></h2>
+      <div class="consensus"><b>社群一致推薦的學習組合：</b> <b>Sander van Vugt</b> 的教材（書籍 + 影片 + 模擬實作考題 — 被譽為「黃金標準」，建議透過 <b>O'Reilly 訂閱約 $49/月 或許多公立圖書館免費入口</b> 取得，比單買划算許多）➔ 可選搭配 <b>Asghar Ghori</b> 的書籍進行深入練習 ➔ 在自家電腦建置 <b>2 台虛擬機的實作實驗室，安裝正版免費的 RHEL</b>（利用 Red Hat Developer 開發者個人訂閱，享 16 個免費授權）➔ 瘋狂刷 <b>van Vugt 與 Lisenet（免費）的模擬試題</b>，直到能在限時內完全不看筆記獨立完成，且所有配置重開機後依然完好生效為止。</div>
+      <p><a class="jump" href="#t-materials">→ 查看完整教材清單與來源評析 (§12)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>快速學習計畫 (Quick Version)</h2>
+      <ol>
+        <li><b>第一天立刻建立實作環境</b>：安裝 2 台 RHEL 虛擬機。之後的每一小時學習都必須是親手上機操作。</li>
+        <li><b>將考核目標當作實作任務</b>，而不是當作課文閱讀：完成每一項任務後，<b>立刻重開機並驗證</b>——「開機能持久化」才是這門考試的核心。</li>
+        <li><b>刻意練習盲打喚起記憶 (Active Retrieval)</b>：關閉所有筆記，面對全空白的終端機重新演練各項任務，僅查閱 man 手冊（完全模擬考試真實環境）。</li>
+        <li><b>計時全真模擬考</b>：練習 van Vugt 與 Lisenet 的模擬試題，每次進行完整 3 小時的離線模擬。直到能在充裕時間內輕鬆做完時，再去預約正式考試。</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ 查看以長期記憶理論設計的詳細計畫 (§13)</a> · <a class="jump" href="cram.html">⚡ 速記重點 (Cram Jam)</a></p>
+    </section>
+
+    <!-- THOROUGH -->
+    <h2 class="part">第二部分 — 深度學習指南 (Thorough Study Guide)</h2>
+
+    <section id="t-exam">
+      <h2>1 · 考試詳情與評分機制 (Exam Details &amp; Format)</h2>
+      <ul>
+        <li><b>你將面對真實的系統與任務清單：</b> 題目形式例如：「在卷組 vgdata 中建立一個名稱為 lvdata、大小為 500 MiB 的邏輯卷，格式化為 XFS，並持久化掛載於 /data。」評分腳本隨後會檢查機器的最終狀態——<i>你用什麼方式達成並不重要</i>；重要的是<b>功能運作正常且重開機後依然生效</b>。</li>
+        <li><b>各任務與類別存在部分給分機制：</b> 成績單 Email 會顯示各考核目標的得分百分比——但不會提供具體扣分原因。許多考生回報某些項目意外拿到 0 分，通常是因為評分腳本檢驗極為嚴格，尤其是漏掉了重開機持久化設定。</li>
+        <li><b>弄壞系統只要修好就不會扣分：</b> 但如果評分時系統無法正常開機，該機器所有題目將直接判定為 0 分！因此在修改 fstab 或開機載入器時，必須兼顧大膽嘗試與細心查驗。</li>
+        <li><b>線上遠端考試注意事項：</b> 必須使用自備電腦透過 Red Hat Live USB 開機、使用外接網路攝影機進行 360 度房間環境掃描、僅限單一螢幕、桌面必須完全淨空（遠端考試禁止攜帶任何紙張，實體考場則允許空白草稿紙）、考前 2～3 天必須完成相容性測試。實體測驗中心的 Kiosk 考機則可避開這些繁瑣限制——Reddit 上多位考生直言遠端考試的心理壓力比實體考場高出一個數量級。</li>
+        <li><b>免費補考福利：</b> 購買個人考試均包含一次重考機會，若未通過或未出席 (NO PASS/NO SHOW)，可在 1 年內免費預約補考一次。</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">系統文件是你的救命稻草</span> 練習解題時，請<b>只依賴</b> <code>man</code>、<code>--help</code> 以及 <code>/usr/share/doc</code>。特別注意帶有 EXAMPLES（範例）段落的高價值手冊頁：<code>man semanage-fcontext</code>、<code>man 5 fstab</code>、<code>man 5 crontab</code>、<code>man lvcreate</code>、<code>man 8 mount</code>。清楚知道範例寫在哪裡，價值等同於死記硬背。</div>
+    </section>
+
+    <section id="t-tools">
+      <h2>2 · 核心工具與文字處理 (Essential Tools)</h2>
+      <h4>重新導向與文字處理</h4>
+      <ul>
+        <li>重新導向：<code>&gt;</code> 覆蓋寫入，<code>&gt;&gt;</code> 附加寫入，<code>2&gt;</code> 標準錯誤輸出 (stderr)，<code>&amp;&gt;</code> 同時導向標準輸出與錯誤輸出，<code>|</code> 管道管線，<code>2&gt;&amp;1</code> 將 stderr 合併至 stdout。</li>
+        <li><code>grep -i</code>（忽略大小寫）<code>-v</code>（反向選取）<code>-r</code>（遞迴目錄搜尋）<code>-E</code>（延伸正規表示式）<code>-l</code>（僅列出檔名）。正規表示式定位錨點 <code>^</code>（列首）<code>$</code>（列尾），字元集合 <code>[abc]</code>，重複次數 <code>*</code> <code>+</code>。</li>
+        <li>經典考題形式：「找出檔案 Y 中所有包含關鍵字 X 的列，並將結果存至 /root/answer」→ <code>grep 'X' Y &gt; /root/answer</code> — 對評分腳本而言，輸出的檔案路徑與檔名絕對不能有任何差錯。</li>
+      </ul>
+      <h4>檔案、連結、壓縮封存與 find 搜尋</h4>
+      <ul>
+        <li>打包封存：<code>tar -czf a.tar.gz /etc</code>（<code>z</code>=gzip，<code>j</code>=bzip2，<code>J</code>=xz）· 解壓縮：<code>tar -xzf a.tar.gz -C /dest</code> · 列出內容：<code>tar -tf</code>。單一檔案壓縮使用 <code>gzip</code>/<code>bzip2</code>，解壓縮使用 <code>gunzip</code>/<code>bunzip2</code>。</li>
+        <li><b>硬連結 (Hard link, <code>ln</code>)</b> = 指向同一個 inode，僅限於同一個檔案系統內，刪除原始檔案後連結依然有效。<b>符號連結 (Soft/Symbolic link, <code>ln -s</code>)</b> = 透過路徑指向目標，可跨越不同檔案系統，目標移動或刪除時連結即失效 (Broken link)。</li>
+        <li><code>find /home -user bob -exec cp -p {} /root/found/ \;</code> · <code>find / -perm -4000</code>（搜尋 SUID 權限）· <code>-size +100M</code> · <code>-name "*.conf"</code>。其中 <code>-exec … {} \;</code> 指令格式是考試的高頻常客。</li>
+        <li>權限管理：<code>chmod u+x / 754 …</code>，<code>chown user:group</code>，<code>chgrp</code>。特殊權限位元：SUID 為 4，SGID 為 2，Sticky bit 為 1（例如群組協作共用目錄常用的 <code>chmod 2770</code>）。</li>
+        <li>遠端連線與傳輸：<code>ssh user@host</code>，<code>scp file user@host:/path</code>，<code>rsync -av</code>，<code>sftp</code>。</li>
+      </ul>
+    </section>
+
+    <section id="t-scripts">
+      <h2>3 · Shell 腳本撰寫 (Shell Scripts)</h2>
+      <ul>
+        <li>腳本開頭宣告 <code>#!/bin/bash</code>；並加上執行權限 <code>chmod +x</code>。傳入參數：<code>$1 $2 …</code>，所有參數列表 <code>$@</code>，參數總數 <code>$#</code>，前一指令結束狀態代碼 <code>$?</code>。</li>
+        <li><b>條件判斷式：</b> <code>if [ "$1" = "start" ]; then … elif … else … fi</code>。常用測試旗標：<code>-f</code> 檔案存在，<code>-d</code> 目錄存在，<code>-z</code> 字串為空；數值比較 <code>-eq -ne -gt -lt</code>。請養成將變數加上雙引號的習慣。</li>
+        <li><b>迴圈結構：</b> <code>for f in /etc/*.conf; do echo "$f"; done</code> · <code>for i in $(seq 1 10)</code> · <code>while read line; do …; done &lt; file</code>。</li>
+        <li><b>在腳本中取得指令執行結果：</b> <code>var=$(command)</code>。</li>
+        <li>典型考題範例：「撰寫 /root/script.sh 腳本，接受一個參數；若參數為 <code>foo</code> 則輸出 X，其餘情況則輸出 Y」——重點在於基礎的分支判斷與參數處理，不會考複雜艱深的語法。寫完後務必針對兩種條件都手動執行測試一次。</li>
+      </ul>
+    </section>
+
+    <section id="t-operate">
+      <h2>4 · 運作中系統操作（開機、程序、日誌、服務）</h2>
+      <h4>開機流程、執行目標 (Targets) 與重設 root 密碼</h4>
+      <ul>
+        <li>系統目標：<code>systemctl get-default</code> / <code>set-default multi-user.target</code>（或圖形介面 <code>graphical.target</code>）；即時切換目標使用 <code>systemctl isolate</code>。單次開機臨時切換目標：在 GRUB kernel 列末端附加 <code>systemd.unit=multi-user.target</code>。</li>
+        <li><b>重設 root 密碼（絕對要滾瓜爛熟 — 這通常是進考場的第一個任務）：</b> 在 GRUB 開機選單按 <code>e</code> → 在 <code>linux</code> 核心參數列最後附加 <code>rd.break</code> → 按 <code>Ctrl+X</code> 開機，隨後執行：
+          <br><code>mount -o remount,rw /sysroot</code> → <code>chroot /sysroot</code> → <code>passwd root</code> → <code>touch /.autorelabel</code> → <code>exit</code> → <code>exit</code>。</li>
+        <li>備用方案：若 rd.break 有狀況，可改附加 <code>init=/bin/bash</code> → <code>mount -o remount,rw /</code> → <code>passwd</code> → <code>touch /.autorelabel</code> → <code>exec /sbin/init</code>。建議兩種都要學會——曾有考生回報在實機考試中遇到 GRUB 異常。</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">重設密碼的第一大陷阱</span> 若漏掉了 <code>touch /.autorelabel</code>，重開機後 <code>/etc/shadow</code> 的 SELinux Context 標籤將處於錯誤狀態——導致所有登入完全失敗，該題直接 0 分。請牢記口訣：先 remount rw，最後 touch /.autorelabel，每次必做！</div>
+      <h4>處理程序 (Processes) 與效能調校 (tuned)</h4>
+      <ul>
+        <li>使用 <code>top</code> / <code>ps aux --sort=-%cpu</code> 找出耗費 CPU 的行程；終止行程使用 <code>kill PID</code>，強制終止為 <code>kill -9</code>，依名稱終止為 <code>pkill name</code>。</li>
+        <li>優先權調節：<code>nice -n 10 cmd</code>，調整現有行程優先權 <code>renice -n 5 -p PID</code>（數值越低優先權越高、佔用越多元件；僅 root 能設負值）。</li>
+        <li><b>效能設定檔 (tuned)：</b> <code>tuned-adm active</code> · <code>tuned-adm list</code> · <code>tuned-adm profile virtual-guest</code> · <code>tuned-adm recommend</code>。（確保 <code>tuned</code> 服務已安裝並啟動啟用）。</li>
+      </ul>
+      <h4>日誌紀錄與 systemd-journald</h4>
+      <ul>
+        <li><code>journalctl -u sshd</code> · <code>-b</code>（本次開機）· <code>-p err</code>（錯誤等級以上）· <code>--since "2026-07-01 09:00"</code> · <code>-f</code>（即時追蹤）。傳統日誌依然存放在 <code>/var/log/</code>（如 messages、secure）。</li>
+        <li><b>重開機後持久保留 journal 日誌（官方明確考點）：</b> 執行 <code>mkdir -p /var/log/journal &amp;&amp; systemctl restart systemd-journald</code> — 或者在 <code>/etc/systemd/journald.conf</code> 設定 <code>Storage=persistent</code>。</li>
+      </ul>
+      <h4>系統服務管理 (systemd)</h4>
+      <ul>
+        <li><code>systemctl status|start|stop|restart httpd</code>；推薦使用 <b><code>systemctl enable --now httpd</code></b> — 一次完成開機自啟與立即啟動。單純 <code>enable</code> 並「不會立即啟動」；單純 <code>start</code> 則在「重開機後不會自動啟動」。若需徹底停用則使用 <code>systemctl mask</code>。</li>
+      </ul>
+    </section>
+
+    <section id="t-storage">
+      <h2>5 · 本地儲存 — 分割區、LVM、Swap</h2>
+      <h4>磁碟分割 (Partitioning)</h4>
+      <ul>
+        <li><code>parted /dev/sdb mklabel gpt</code>（建立分割表；<b>注意 parted 會立即寫入磁碟 — 無法復原</b>）→ <code>parted /dev/sdb mkpart data xfs 1MiB 501MiB</code> → <code>parted /dev/sdb set 1 lvm on</code>。</li>
+        <li>亦可使用互動式的 <code>fdisk</code> / <code>gdisk</code>（n=新建、t=變更型別、w=儲存寫入）。修改使用中的磁碟後執行 <code>partprobe</code> 更新核心分割資訊；格式化全新分割區前可執行 <code>udevadm settle</code> 等待裝置就緒。</li>
+        <li>V10 重點說明：RHEL 10 考試目標已<b>全面改為 GPT 分割</b>；V9 時期仍列有 MBR。</li>
+      </ul>
+      <h4>LVM 邏輯卷管理 — 考試最核心拿分區</h4>
+      <ul>
+        <li>層級結構：<b>PV（實體卷）→ VG（卷組）→ LV（邏輯卷）</b>。操作流程：<code>pvcreate /dev/sdb1</code> → <code>vgcreate vgdata /dev/sdb1</code>（題目若指定 PE 大小，使用 <code>-s 16M</code> 參數）→ <code>lvcreate -n lvdata -L 500M vgdata</code>。</li>
+        <li>容量參數區別：<code>-L</code> 指定具體容量（如 500M, 2G）；<code>-l</code> 指定邏輯延伸區 Extents 數量 — <b>百分比符號只能搭配 <code>-l</code> 使用</b>（如 <code>-l 100%FREE</code>）。</li>
+        <li>擴充容量：若 VG 空間不足先執行 <code>vgextend vgdata /dev/sdc1</code>，接著執行 <b><code>lvextend -r -L +500M /dev/vgdata/lvdata</code></b> — 加上 <code>-r</code> 會連同檔案系統一起放大調整（這是最不容易出錯的救命習慣）。手動放大檔案系統：XFS 使用 <code>xfs_growfs /掛載點</code>（指定<b>掛載點路徑</b>）；ext4 使用 <code>resize2fs /dev/…</code>（指定<b>裝置路徑</b>）。<b>特別注意：XFS 檔案系統完全不支援縮減 (shrink)。</b></li>
+        <li>狀態檢查：<code>pvs</code> / <code>vgs</code> / <code>lvs</code>（搭配 <code>-a -o +devices</code> 查看細節），以及 <code>lsblk</code>。</li>
+      </ul>
+      <h4>Swap 置換空間</h4>
+      <ul>
+        <li><code>mkswap /dev/vgdata/lvswap</code> → <code>swapon /dev/vgdata/lvswap</code> → 在 /etc/fstab 加入設定列：<code>/dev/vgdata/lvswap none swap defaults 0 0</code> → 執行 <code>swapon -a &amp;&amp; swapon --show</code> 驗證是否成功啟用與持久化。</li>
+      </ul>
+    </section>
+
+    <section id="t-fs">
+      <h2>6 · 檔案系統、NFS 與 autofs 自動掛載</h2>
+      <h4>格式化建立與持久化掛載</h4>
+      <ul>
+        <li>在裝置或邏輯卷上建立檔案系統：<code>mkfs.xfs</code> / <code>mkfs.ext4</code> / <code>mkfs.vfat</code>。</li>
+        <li>使用 <code>blkid</code> 查詢裝置的 UUID；在 /etc/fstab 中加入條目：<code>UUID=abc-123  /data  xfs  defaults  0 0</code>（UUID 前後請勿加引號）。</li>
+        <li><b>重開機前務必執行驗證：</b> 執行 <code>mount -a</code>（若有語法錯誤會立刻報錯）並使用 <code>findmnt --verify</code> 查驗。fstab 只要有一處手誤，開機就會卡死在 emergency mode — 這是考試中最常讓整台機器陣亡的致命傷。</li>
+      </ul>
+      <h4>NFS 與 autofs 自動掛載</h4>
+      <ul>
+        <li>手動掛載 NFS：<code>mount -t nfs serverb:/share /mnt</code>；寫入 fstab 持久化時檔案系統型別填 <code>nfs</code>。</li>
+        <li><b>autofs（依需求自動掛載 — 官方明確考點）：</b> <code>dnf install -y autofs nfs-utils &amp;&amp; systemctl enable --now autofs</code>。</li>
+        <li>主對應檔 <code>/etc/auto.master.d/shares.autofs</code>：間接掛載寫法 → <code>/shares /etc/auto.shares</code>；直接掛載寫法 → <code>/- /etc/auto.direct</code>。</li>
+        <li>間接對應條目：<code>work -rw,sync serverb:/shares/work</code>（掛載後路徑為 /shares/work）。直接對應條目則需填寫完整絕對路徑。</li>
+        <li>經典萬用字元家目錄範例：<code>* -rw serverb:/home/guests/&amp;</code> — 其中 <code>*</code> 代表匹配的目錄名稱，<code>&amp;</code> 會自動代換該名稱。<b>注意：切勿預先手動建立間接掛載的子目錄；修改完對應檔後請重啟 autofs 服務。</b></li>
+      </ul>
+      <h4>權限排錯與群組協作共用目錄</h4>
+      <ul>
+        <li>群組協作共用目錄配置秘訣：<code>mkdir /shared &amp;&amp; chgrp devs /shared &amp;&amp; chmod 2770 /shared</code> — SGID 位元 (2) 可確保未來在該目錄下建立的新檔案自動繼承該群組擁有權。</li>
+        <li>ugo/rwx 權限不足以精細分配時使用 ACL：<code>setfacl -m u:bob:rw- file</code>，為目錄設定預設繼承 ACL <code>setfacl -m d:u:bob:rw /dir</code>，使用 <code>getfacl</code> 查看完整權限。</li>
+        <li>診斷「Permission denied 權限不足」的標準順序：依序檢查 檔案擁有者 (Owner) ➔ 權限模式 (Mode) ➔ ACL 遮罩 ➔ <b>以及 SELinux Context 標籤</b> (§10)。</li>
+      </ul>
+    </section>
+
+    <section id="t-deploy">
+      <h2>7 · 系統部署、配置與維護</h2>
+      <h4>工作排程 (Scheduling)</h4>
+      <ul>
+        <li><b>cron 定期排程：</b> 執行 <code>crontab -e</code>；欄位順序依序為：<b>分 時 日 月 週</b>。例如 <code>0 2 * * 1-5</code> 代表每週一至週五凌晨 02:00；<code>*/5 * * * *</code> 代表每隔 5 分鐘執行一次。若是在 <code>/etc/cron.d/</code> 建立系統層級排程檔，必須額外加上<b>執行身分的使用者名稱欄位</b>。</li>
+        <li><b>at 單次排程：</b> <code>at 23:00</code> → 輸入要執行的指令 → 按 <code>Ctrl+D</code> 存檔送出；查詢佇列使用 <code>atq</code>，刪除工作使用 <code>atrm</code>。</li>
+        <li><span class="tag d1">V10</span> <b>systemd timers 定時器：</b> 建立包含 <code>OnCalendar=</code> 規則的 <code>.timer</code> 單元並對應同名的 <code>.service</code>；啟用指令：<code>systemctl enable --now name.timer</code>；檢視清單：<code>systemctl list-timers</code>。</li>
+      </ul>
+      <h4>網路校時服務 (NTP)</h4>
+      <ul>
+        <li><b>chrony 時間同步：</b> <code>dnf install -y chrony &amp;&amp; systemctl enable --now chronyd</code>；在 <code>/etc/chrony.conf</code> 指向時間伺服器：<code>server classroom.example.com iburst</code>（務必包含 <b>iburst</b> 參數加速同步），重啟 chronyd，使用 <code>chronyc sources -v</code> 驗證（顯示 <code>^*</code> 代表已成功同步）。</li>
+        <li>時區設定：<code>timedatectl set-timezone Asia/Taipei</code> · 啟用網路校時：<code>timedatectl set-ntp true</code>。</li>
+      </ul>
+      <h4>軟體套件管理 — dnf、套件庫 (以及 V10: Flatpak)</h4>
+      <ul>
+        <li>套件操作：<code>dnf install/remove/search/info</code>，套件群組：<code>dnf group install</code>，歷史紀錄：<code>dnf history</code>。必備救命指令：<b><code>dnf provides */semanage</code></b> — 查詢某個未知指令是由哪一個套件所提供。</li>
+        <li><b>設定本機/網路套件庫（必須把 .repo 格式背熟 — 考題只會給你 URL，不會給設定語法）：</b>
+          <br>在 <code>/etc/yum.repos.d/local.repo</code> 寫入：<code>[baseos]</code> / <code>name=BaseOS</code> / <code>baseurl=http://…/BaseOS</code> (或本機掛載 <code>file:///mnt/BaseOS</code>) / <code>enabled=1</code> / <code>gpgcheck=0</code>。<b>注意：RHEL 來源光碟/映像檔包含 TWO 兩個套件庫 — BaseOS 與 AppStream 兩者都必須設定！</b></li>
+        <li>核心升級：執行 <code>dnf update kernel</code> 會在保留舊核心的同時安裝新核心；GRUB 開機選單會保留兩者以備安全回退。</li>
+        <li><span class="tag d1">V10</span> <b>Flatpak 應用套件：</b> <code>flatpak remote-add --if-not-exists flathub &lt;url&gt;</code> · <code>flatpak install/uninstall/list</code> · <code>flatpak remotes</code>。</li>
+        <li><span class="tag d1">V10</span> <b>開機載入器 (Bootloader)：</b> 編輯 <code>/etc/default/grub</code> 後使用 <code>grub2-mkconfig -o /boot/grub2/grub.cfg</code> 重新產生開機檔；修改個別核心啟動參數使用 <code>grubby --update-kernel=ALL --args="…"</code>。</li>
+      </ul>
+    </section>
+
+    <section id="t-network">
+      <h2>8 · 基礎網路管理 (Networking)</h2>
+      <h4>nmcli — 一行指令搞定網路設定</h4>
+      <ul>
+        <li>建立靜態 IP 連線：
+          <br><code>nmcli con add con-name lab type ethernet ifname enp1s0 ipv4.method manual ipv4.addresses 192.168.1.10/24 ipv4.gateway 192.168.1.1 ipv4.dns 192.168.1.1</code></li>
+        <li>修改現有連線：<code>nmcli con mod lab +ipv4.dns 8.8.8.8</code>（使用 <code>+</code> 號代表追加）。<b>接著必須執行 <code>nmcli con up lab</code> — 修改後的設定必須重新啟用連線才會套用！</b></li>
+        <li>設定靜態 IP 時 <code>ipv4.method manual</code> 為必填參數（否則 DHCP 會覆蓋你的設定）。IPv6 設定方式類似：<code>ipv6.method manual ipv6.addresses …</code>。</li>
+        <li>檢查網路狀態：<code>nmcli con show</code>，<code>nmcli dev status</code>，<code>ip a</code>，<code>ip route</code>。</li>
+      </ul>
+      <h4>主機名稱與名稱解析</h4>
+      <ul>
+        <li>設定主機名稱：<code>hostnamectl set-hostname server1.example.com</code>；靜態解析加入 <code>/etc/hosts</code>；DNS 伺服器必須設定在連線設定檔 (nmcli) 內，請勿手動修改 resolv.conf。</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">網路設定失誤是整場考試的終結者</span> 如果你的變更導致網路斷線或重開機後無法連線，評分系統就無法登入你的機器——2025 年曾有考生因為使用 nmtui 圖形工具修改後未確認開機持久化，導致<b>網路類別直接拿到 0 分</b>。建議一律使用 nmcli 指令，完成後重新啟用連線，並<b>重開機確認</b> IP、Gateway、DNS 與 Hostname 全部依然正常生效。</div>
+    </section>
+
+    <section id="t-users">
+      <h2>9 · 使用者與群組權限管理 (Users &amp; Groups)</h2>
+      <ul>
+        <li>新增使用者：<code>useradd -u 2000 -G wheel,devs -s /bin/bash -c "Bob" bob</code> · 系統服務帳號：<code>useradd -s /sbin/nologin svc</code> · 刪除帳號連同家目錄：<code>userdel -r</code>。</li>
+        <li><b><code>usermod -aG devs bob</code> — 其中的 <code>-a</code> 參數極為關鍵：</b> 若只加 <code>-G</code> 而漏掉 <code>-a</code>，會直接<i>覆蓋並清空</i>該使用者原本的所有附屬群組。群組指令：<code>groupadd -g 5000 devs</code>，<code>groupmod</code>，<code>groupdel</code>；檢查使用者身分：<code>id bob</code>。</li>
+        <li><b>密碼過期策略 (chage)：</b> <code>chage -M 90 -m 7 -W 5 bob</code>（最長/最短天數/警告期）· 強制下次登入必須更改密碼：<code>chage -d 0 bob</code> · 設定帳號停用日期：<code>chage -E 2026-12-31 bob</code> · 檢視設定：<code>chage -l bob</code>。針對<i>未來新建立</i>使用者的預設設定位於 <code>/etc/login.defs</code>。</li>
+        <li><b>提權設定 (sudo)：</b> 建議在 <code>/etc/sudoers.d/</code> 建立獨立設定檔（例如 <code>bob ALL=(ALL) ALL</code>），並使用 <code>visudo -cf</code> 檢查語法；或者直接將使用者加入 wheel 群組：<code>usermod -aG wheel bob</code>（sudoers 預設已賦予 wheel 群組權限）。</li>
+      </ul>
+    </section>
+
+    <section id="t-security">
+      <h2>10 · 安全防護 — firewalld、umask、SSH 金鑰、SELinux</h2>
+      <h4>firewalld 動態防火牆</h4>
+      <ul>
+        <li>開放服務與埠號：<code>firewall-cmd --permanent --add-service=http</code> · <code>--permanent --add-port=8080/tcp</code> · 完成後務必執行 <b><code>firewall-cmd --reload</code></b>。</li>
+        <li>檢視規則：<code>--list-all</code>，<code>--get-services</code>。若先前在 runtime 執行時期做了修改想保留？執行 <code>--runtime-to-permanent</code>。</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">防火牆的雙重陷阱</span> 只加 <code>--permanent</code> <b>當下不會生效</b>（必須搭配 <code>--reload</code>）；如果<b>沒加</b> <code>--permanent</code>，當下雖然通了但<b>重開機後規則就消失</b>。請確保兩者皆正確執行！</div>
+      <h4>umask 與 SSH 金鑰認證</h4>
+      <ul>
+        <li>umask 權限計算（以檔案 666 / 目錄 777 為基準扣除）：umask 設為 <code>027</code> → 建立的檔案為 640、目錄為 750。欲永久設定可在 <code>/etc/profile.d/</code> 建立腳本或寫入使用者的 <code>~/.bashrc</code>。</li>
+        <li>金鑰認證流程：<code>ssh-keygen</code> 產生金鑰 → <code>ssh-copy-id user@host</code> 傳送公鑰 → 測試免密碼登入。金鑰存放於 <code>~/.ssh/authorized_keys</code>（目錄權限需為 700，檔案權限需為 600）。</li>
+      </ul>
+      <h4>SELinux — 考試最多失分與得分的關鍵核心</h4>
+      <ul>
+        <li>運作模式：查詢 <code>getenforce</code>；暫時切換 <code>setenforce 0|1</code>；永久設定請編輯 <code>/etc/selinux/config</code> (enforcing/permissive/disabled)。</li>
+        <li>Context 安全本文標籤：檢視指令 <code>ls -Z</code> / <code>ps -Z</code>。<b>設定永久 Context 的標準 SOP 口訣：</b>
+          <br><code>semanage fcontext -a -t httpd_sys_content_t '/web(/.*)?'</code> → 隨後執行 <code>restorecon -Rv /web</code>。<b>路徑正規表示式請務必加上單引號！</b> 不確定標籤型別時，可參考現有正常目錄：<code>semanage fcontext -l | grep /var/www</code>。</li>
+        <li><b>絕對不要在考試中使用 <code>chcon</code></b> — 該指令不會寫入 SELinux 政策資料庫，一旦系統執行重新標籤 (relabel) 就會全部遺失，評分腳本的 relabel 會直接讓它現形扣分。</li>
+        <li>非標準連接埠授權：<code>semanage port -a -t http_port_t -p tcp 82</code>（查詢清單：<code>semanage port -l | grep http</code>）。</li>
+        <li>SELinux 布林值：查詢 <code>getsebool -a | grep httpd</code>；變更時<b>務必加上 <code>-P</code> 參數持久化</b>：<code>setsebool -P httpd_can_network_connect on</code> — 沒加 <code>-P</code> 重開機後立刻失效。</li>
+        <li>排查拒絕連線紀錄：<code>ausearch -m AVC -ts recent</code>，或使用 <code>sealert -a /var/log/audit/audit.log</code>。</li>
+        <li>找不到 <code>semanage</code> 指令？它包含在 <code>policycoreutils-python-utils</code> 套件中 — 可透過 <code>dnf provides */semanage</code> 快速尋找並安裝。</li>
+      </ul>
+    </section>
+
+    <section id="t-containers">
+      <h2>11 · 使用 Podman 管理容器 <span class="tag d2">僅限 EX200V9 — V10 已移除</span></h2>
+      <ul>
+        <li>映像檔管理：<code>podman pull registry.access.redhat.com/ubi9/ubi</code> · <code>podman images</code> · <code>podman inspect</code> · <i>不下載直接檢查遠端映像檔</i>：<code>skopeo inspect docker://registry…</code> · 登入私有庫：<code>podman login</code>。</li>
+        <li>透過 Containerfile 建置：<code>podman build -t myimg .</code></li>
+        <li>執行容器：<code>podman run -d --name web -p 8080:8080 -v /home/user/www:/var/www:Z IMAGE</code> — 其中的 <b><code>:Z</code></b> 會自動為掛載目錄標註 SELinux 標籤（若忘記加會直接遭遇 Permission denied 錯誤）。常用指令：<code>podman ps -a</code>、<code>stop</code>、<code>start</code>、<code>rm</code>、<code>logs</code>。</li>
+        <li><b>非 root (Rootless) 容器無法綁定 1024 以下的特權埠</b> — 必須對應至高位埠號（如 8080），切勿直綁 80。</li>
+        <li><b>將容器封裝為 systemd 服務開機自啟（V9 壓軸大題）：</b>
+          <ol>
+            <li><code>loginctl enable-linger $USER</code> — 若未啟用 linger，使用者登出時容器服務會隨之終止。</li>
+            <li><code>mkdir -p ~/.config/systemd/user &amp;&amp; cd ~/.config/systemd/user</code></li>
+            <li><code>podman generate systemd --new --files --name web</code></li>
+            <li><code>systemctl --user daemon-reload &amp;&amp; systemctl --user enable --now container-web.service</code></li>
+          </ol>
+          執行 <code>systemctl --user</code> 時，必須以該使用者的真實 SSH 登入工作階段操作（切勿使用 <code>su -</code> 切換身分操作）。</li>
+      </ul>
+    </section>
+
+    <!-- MATERIALS -->
+    <section id="t-materials">
+      <h2>12 · 完整學習資源評析 <span class="kbd">(社群高度共識)</span></h2>
+      <p class="legend">綜合整理自 Reddit 上的 r/redhat、r/linuxadmin、r/sysadmin 及 Red Hat Learning Community 超過 30 篇通過經驗分享 (2023–2026)。社群對教材的共識度異常一致。</p>
+
+      <div class="consensus"><b>重點總結：</b> <b>Sander van Vugt</b> 的教材（書籍 + 影片 + 模擬實作實驗）被公認為備考「黃金標準」——在 30 篇討論中有約 20 篇強烈推薦，且經常被作為唯一使用的主要教材。建議透過 <b>O'Reilly 訂閱（約 $49/月，有免費試用，或透過許多公立圖書館帳號免費存取）</b> 學習，省下購買單堂昂貴課程的費用。輔以 <b>Asghar Ghori 的書</b> 加強深度，建立包含 <b>2 台虛擬機的正版免費 RHEL 實驗室</b>，反覆演練 <b>van Vugt + Lisenet（免費）</b> 的模擬試題，直到限時內能輕鬆閉眼作答為止。</div>
+
+      <h3>1 · 書籍與線上課程</h3>
+      <table>
+        <tr><th>教材資源</th><th>社群評價與實測反饋</th></tr>
+        <tr><td><span class="rank">#1</span><b>Sander van Vugt</b> — <i>RHCSA Cert Guide</i> (RHEL 9 與 RHEL 10 版本) + O'Reilly 影音課程 + 考前衝刺直播</td><td>被譽為「EX200 考試聖經」。書末附帶的實作實驗與模擬考是關鍵致勝武器——「只要能把書後的 4 個模擬實作題完整做完，考試就一定會過」。針對 RHEL 新版本的更新速度最快。缺點：書籍有少數勘誤（「每個指令都要親自驗證」），教學風格較為嚴肅乾淨。</td></tr>
+        <tr><td><span class="rank">#2</span><b>Asghar Ghori</b> — <i>RHCSA Training and Exam Preparation Guide</i> (RHEL 9 第三版 / RHEL 10 第四版)</td><td>受歡迎程度幾乎與 van Vugt 旗鼓相當，通常被拿來<i>搭配</i>使用：「題目難度甚至略高於真實考試」。售價約 $40 美元的電子書附帶 4 套完整模擬試題。缺點：有些許錯字，容器章節相對精簡。社群最常使用的黃金組合為：<b>Ghori 用於打底深度 + van Vugt 用於影片理解與實作模擬</b>。</td></tr>
+        <tr><td><b>Red Hat 官方課程</b> — RH124/RH134 (或 RH199 速成班)，Red Hat Learning Subscription (RHLS)</td><td>實驗環境極佳，但官方原廠課程定價高達約 $5,000–$7,500 美元——<b>除非由公司全額報銷，否則不建議自費</b>。在考取 RHCSA/RHCE 之後的更高階冷門認證時，官方 RHLS 才真正具備不可替代的價值。</td></tr>
+        <tr><td><span class="rank">免費</span><b>YouTube 免費頻道</b></td><td>越來越多考生將其作為核心教材：<b>Beanologi</b> 的 RHCSA 9 系列（曾有考出 286/300 高分的考生全程只花了 $15 美元教材費），以及 Red Hat 官方的 "Into the Terminal" 節目。</td></tr>
+        <tr><td><b>Udemy 及其他平台</b></td><td>評價參差不齊。Imran Afzal 適合完全零基礎的新手入門，但針對正式考試內容稍嫌陳舊；KodeKloud 的講解尚可，但其線上模擬考系統的<b>自動評分機制經常出現 bug</b>。</td></tr>
+      </table>
+
+      <h3>2 · 模擬考與實作練習題 <span class="tag d1">最重要關鍵</span></h3>
+      <ul>
+        <li><span class="rank">#1</span><b>Van Vugt 的實作模擬試題</b>（附於書末及 O'Reilly 平台）— 檢驗備考狀態的最佳準則：「重複練習直到閉著眼睛都能做出來」。</li>
+        <li><span class="rank">免費</span><b>Lisenet.com 免費模擬試題</b> — 網路上最優秀的免費題目，出題風格與 van Vugt 有所不同（非常適合互補）。檢驗標準：在完全無筆記、離線、計時條件下順暢完成。</li>
+        <li><b>Ghori 書中隨附的 4 套試題</b>；以及 <b>Beanologi</b> 的考試風格演練影片。</li>
+        <li>GitHub 開源實驗室環境：推薦 <code>aggressiveHiker/rhcsa9</code>；早期常見的 <code>rdbreak/rhcsa8env</code> Vagrant 環境目前已過於老舊。CertDepot 針對各考核點的整理依然是實用的參考資料（但部分內容停留在 RHEL 7/8 時代需注意版本）。</li>
+      </ul>
+
+      <h3>3 · 自建實作環境 (本考試絕對不可妥協的核心)</h3>
+      <ul>
+        <li><b>取得免費正版 RHEL：</b> 註冊 <b>Red Hat Developer Subscription for Individuals</b> 開發者個人訂閱 (developers.redhat.com)，可獲得享有最多 <b>16 台系統授權</b>的正式帳號。雖然 Rocky/Alma 等相容發行版也能應急，但既然官方正版 RHEL 是免費的——請直接使用 RHEL。</li>
+        <li><b>架構拓撲：</b> 建立 2 台小規格虛擬機（伺服器端 server + 節點端 node，完全模擬真實考場拓撲），各配置約 2 GB RAM / 20 GB 硬碟，<b>並額外掛載多顆備用虛擬磁碟</b>供 LVM 與分割區練習使用。底層虛擬化可採用 KVM/virt-manager、VirtualBox 或 Proxmox。</li>
+        <li><b>在嚴格考試情境下進行練習</b> — 切斷網路連線、不查閱個人筆記、只靠系統內建 man 手冊。</li>
+      </ul>
+
+      <h3>4 · 建議備考時程</h3>
+      <ul>
+        <li>平常即為 Linux 日常使用者 / 現職系統管理員：<b>約 1～2 個月</b>（亦有高手「每週投入 10 小時、衝刺 3 週」即順利考取）。</li>
+        <li>Linux 經驗較少或零基礎者：<b>約 3～6 個月</b>。黃金鐵則：<b>實際敲鍵盤的實作時數，遠比翻書週數重要得多。</b></li>
+      </ul>
+
+      <div class="callout trap"><span class="lbl">考古題題庫 (Dumps) 在此完全無用且極度危險</span> 在真實機器、評分腳本嚴格檢驗的實機考試中，根本沒有選擇題答案可以死背。坊間流傳的所謂「題庫」大多是過時的 RHEL 8 題目，背了只會誤導觀念；且使用盜版原廠教材更面臨違反 NDA 保密協定及證照遭撤銷的嚴重風險。請把寶貴時間花在自己的實驗室敲鍵盤。</div>
+
+      <h4>資料來源參考</h4>
+      <ul class="legend">
+        <li>官方連結：<a href="https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam" target="_blank" rel="noopener">EX200 官方考試說明與考核目標</a> · <a href="https://www.redhat.com/en/about/red-hat-training-policies" target="_blank" rel="noopener">紅帽訓練與補考政策說明</a> · <a href="https://developers.redhat.com/" target="_blank" rel="noopener">Red Hat 開發者免費訂閱申請</a></li>
+        <li>社群精華帖：Reddit r/redhat 考取心得 (1jxbzgu 270/300 · 1i0dqf2 286/300 · 1kd1hwk 與 1l73kz0 滿分 300/300 · 1j6bn0h 255/300 · 1hgvl7s "真實評析 Sander van Vugt") · r/linuxadmin 精選文章 (18vf6oe, 195trlf, 1ifaxgl) · <a href="https://www.lisenet.com/tag/rhcsa/" target="_blank" rel="noopener">Lisenet 模擬試題</a> · <a href="https://www.sandervanvugt.com/" target="_blank" rel="noopener">sandervanvugt.com</a></li>
+      </ul>
+    </section>
+
+    <!-- PLAN -->
+    <section id="t-plan">
+      <h2>13 · 高成效複習計畫（基於記憶科學，約 6～10 週）</h2>
+      <p>RHCSA 是印證<b>「從做中學 (Learning by doing)」</b>的最佳典範：因為練習的過程就等於考試本身。只看書閱讀 LVM 拿不到任何分數；只有親手把每個指令敲進終端機形成肌肉記憶，才能穩拿滿分。以下所有學習原則均需落實於上機實作中。</p>
+      <table>
+        <tr><th>科學記憶原則</th><th>如何在 RHCSA 備考中具體應用</th></tr>
+        <tr><td><b>生成效應 (Generation effect)</b></td><td>絕對不要從書中複製貼上指令——每個字元都要親手敲入。故意把設定改壞，再自己動手修復。</td></tr>
+        <tr><td><b>主動提取回憶 (Active recall)</b></td><td>面對全空白的終端機、關閉筆記重新演練各項任務——只允許查閱 man 手冊（模擬正式考試）。只要中途偷看筆記，該題就必須排入待重練清單。</td></tr>
+        <tr><td><b>間隔重複 (Spaced repetition)</b></td><td>每次學習開始前安排 10 分鐘溫習先前學過的章節。無論進度如何，每週都要固定重練一次「重設 root 密碼、fstab 掛載、SELinux 標籤、nmcli 網路設定」。</td></tr>
+        <tr><td><b>交叉練習 (Interleaving)</b></td><td>模擬考時將「儲存 + 帳號 + SELinux + 網路」混合在同一次演練中進行——習慣多主題交錯解題，避免單一主題的長時間馬拉松。</td></tr>
+        <tr><td><b>測驗效應 (Testing effect)</b></td><td>及早開始進行計時全真模擬測驗，而不是留到最後一刻。每次模擬考答錯或卡住的題目，就是下一週的重點強化項目。</td></tr>
+      </table>
+      <table>
+        <tr><th>階段</th><th>核心重點</th><th>具體執行任務</th></tr>
+        <tr><td><b>第 1 週</b></td><td>實作環境 + 必備工具</td><td>建置 2 台 RHEL 虛擬機（申請免費開發者訂閱）並掛載多顆備用磁碟。精熟 §2–§3：重新導向、grep、find、tar、連結、檔案權限、撰寫簡易 Shell 腳本。</td></tr>
+        <tr><td><b>第 2–3 週</b></td><td>系統運作與儲存</td><td>精熟 §4–§6：開機目標、<b>將重設 root 密碼練成反射神經</b>、journald、systemd 服務；磁碟分割 → LVM 邏輯卷 → fstab 掛載 → NFS/autofs。每次做完任務務必重開機檢驗；每次重開機前必先執行 <code>mount -a</code>。</td></tr>
+        <tr><td><b>第 4–5 週</b></td><td>配置維護與系統安全</td><td>精熟 §7–§10：cron/at (V10 包含 timers)、chrony 校時、套件庫 (.repo 語法背熟)、nmcli 一行指令設定、帳號/chage/sudoers、firewalld、SELinux 標籤口訣 (semanage fcontext + restorecon)。若考 V9 練容器 §11；若考 V10 練 Flatpak + 開機載入器。</td></tr>
+        <tr><td><b>第 6 週以上</b></td><td>全真計時模擬考</td><td>完整練習 Van Vugt 的實驗題目與 Lisenet 試題，每次進行完整 3 小時的閉卷離線測驗。自我評分唯一標準：<b>重開機後檢查所有設定是否依然完好運作</b>。反覆間隔重練錯題；直到每次都能在剩餘約 30 分鐘的情況下順利做完，即可安心預約考試。</td></tr>
+      </table>
+      <p class="legend">有經驗的系統管理員可將時程濃縮至 3～4 週；零基礎者建議延長第 1～5 週的基礎打底，並建議先修習 RH124/RH134 的基礎觀念。</p>
+      <div class="callout tip"><span class="lbl">備考完成的檢驗標準</span> 當你能夠在無網路、無筆記、3 小時以內獨立完成一套完整的全真模擬試題，而且所有功能在<b>重開機之後依然完好如初</b>時，你就已經準備充分了。這個重開機的檢驗步驟，就是整場考試最純粹的縮影。</div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="t-tips">
+      <h2>14 · 應試技巧與避坑指南 (Exam-Day Tips &amp; Common Traps)</h2>
+      <h4>戰略思維與應考策略</h4>
+      <ul>
+        <li><b>開考前 10～15 分鐘先快速瀏覽所有題目：</b> 先拿下簡單有把握的送分題，遇到複雜卡關的題目先標註跳過稍後再解——但請善用完整的 3 小時；因為跳過的題目配分可能相當重。</li>
+        <li><b>最後 15～30 分鐘務必保留給「系統重開機 ＋ 全題目逐一驗證」：</b> 「請養成經常重開機檢查的習慣：只要做完了任何可能受重開機影響的設定，就應該考慮重開機確認。」</li>
+        <li>考試開始後，儘早把各考試主機之間的 SSH 免密碼金鑰認證設定好——這會在後續解題時為你省下大量打密碼的時間。</li>
+        <li>遠端考試的瀏覽器控制台中，Esc 鍵有時會發生無效的情況——在 vim 中可以隨時改用 <code>Ctrl+[</code> 代替 Esc 鍵。</li>
+        <li>向監考考官提問題目<i>內容</i>可能會被扣分；只有在遭遇考試環境故障或斷線等問題時才聯絡考官。</li>
+      </ul>
+      <h4>致命陷阱清單（以下每一項都曾讓真實考生的整個類別直接拿到 0 分）</h4>
+      <ul>
+        <li><b>/etc/fstab 拼錯任何一個字</b> → 導致系統重開機進入 emergency mode，整台機器停擺。<b>每次修改完 fstab 後，絕對要先執行 <code>mount -a</code></b>，並搭配 <code>findmnt --verify</code> 查驗。</li>
+        <li><b><code>systemctl start</code> 啟動了服務卻忘記 <code>enable</code> 開機自啟</b>（或相反）→ 養成統一使用 <code>systemctl enable --now</code> 的習慣。</li>
+        <li><b>firewall-cmd 漏加 <code>--permanent</code></b>（重開機就消失）或是<b>加了 <code>--permanent</code> 卻忘記執行 <code>--reload</code></b>（當下根本沒套用）。</li>
+        <li><b>誤用 <code>chcon</code> 暫時修改標籤，而沒有使用 <code>semanage fcontext</code> + <code>restorecon</code></b> — 系統重新標籤時會全部抹除失效。同理，<code>setsebool</code> 忘記加 <code>-P</code> 參數。</li>
+        <li><b>重設 root 密碼流程中，忘記執行 <code>touch /.autorelabel</code></b>。</li>
+        <li><b>使用 <code>usermod -G</code> 時忘記加上 <code>-a</code> 追加參數</b> — 這會直接清空該使用者原有的所有其他附屬群組。</li>
+        <li><b>nmcli 修改網路設定後，忘記執行 <code>nmcli con up</code> 重新套用</b> — 網路設定失效會導致評分腳本無法連線，整個網路項目直接以 0 分計算。</li>
+        <li>autofs 自動掛載：預先手動建立了間接掛載目錄，或是在對應檔中寫錯了 <code>*</code> 與 <code>&amp;</code> 萬用字元語法。</li>
+        <li>V9 容器題：目錄掛載忘記加上 <code>:Z</code> 標籤、忘記執行 <code>loginctl enable-linger</code>、或者在切換身分時使用 <code>su -</code> 測試 <code>systemctl --user</code> 而非使用真實 SSH 登入。</li>
+        <li>軟體庫設定：只設定了光碟來源中的其中一個庫，忘記必須同時定義 <b>BaseOS</b> 與 <b>AppStream</b> 兩個套件庫。</li>
+      </ul>
+      <div class="callout note"><span class="lbl">終極心法口訣</span> <b>「現在功能正常嗎？重開機之後還能正常運作嗎？請證明給我看。」</b> 如果你只能從本指南帶走一個習慣，請務必把這句話刻在腦海裡。</div>
+
+      <div class="footer">
+        <p><b>資料來源說明：</b> 依據 Red Hat 官方 EX200 考試頁面與考核大綱（核對至 2026 年 — 以 RHEL 10 為基礎，並註明 RHEL 9 差異）、Red Hat 官方訓練/補考條款與遠端考試常見問題、RHEL 官方指令文件，以及來自 Reddit r/redhat、r/linuxadmin 超過 30 位考生的真實經驗回報整理。考試通過門檻、報名費用與時長請於預約考試時以官方公告為準。本指南非 Red Hat 官方附屬或背書產品。</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ 回到頁首</a></p>
+    </section>
+
+  </main>
+</div>
+<a id="top"></a>
+<script>
+// Shared scrollspy: highlights the TOC link for the section currently in view.
+(function(){
+  var toc = document.getElementById('toc');
+  if(!toc) return;
+  var tocLinks = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var map = {};
+  tocLinks.forEach(function(a){
+    var href = a.getAttribute('href') || '';
+    if(href.charAt(0) !== '#') return;          // skip cross-page links
+    var el = document.getElementById(href.slice(1));
+    if(el) map[href.slice(1)] = a;
+  });
+  var ids = Object.keys(map);
+  if(!ids.length) return;
+  var sb = document.getElementById('sidebar');
+  function onScroll(){
+    var pos = window.scrollY + 120;
+    var currentId = ids[0];
+    for(var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if(el && el.offsetTop <= pos) currentId = ids[i];
+    }
+    tocLinks.forEach(function(a){ a.classList.remove('active'); });
+    var link = map[currentId];
+    if(link){
+      link.classList.add('active');
+      if(sb){
+        var lt = link.offsetTop, lb = lt + link.offsetHeight;
+        if(lt < sb.scrollTop || lb > sb.scrollTop + sb.clientHeight){
+          sb.scrollTop = lt - sb.clientHeight/2;
+        }
+      }
+    }
+  }
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){ window.requestAnimationFrame(function(){onScroll();ticking=false;}); ticking=true; }
+  });
+  onScroll();
+})();
+
+</script>
+</body>
+</html>
