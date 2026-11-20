@@ -1,6 +1,10 @@
 # RHCSA (EX200) 繁體中文學習指南
 
-本私人倉庫收錄 Red Hat Certified System Administrator (RHCSA / EX200) 繁體中文學習指南與單頁速記重點（Cram Jam），並於根目錄提供可即時檢索章節與內嵌閱讀的入口網站 (`index.html`)。
+本倉庫收錄 Red Hat Certified System Administrator (RHCSA / EX200) 繁體中文學習指南與單頁速記重點（Cram Jam），並於根目錄提供可即時檢索章節與內嵌閱讀的入口網站 (`index.html`)。
+
+🌐 **線上網站（GitHub Pages）**：[https://marker1111014.github.io/harunaadoga-rhcsa-ex200-exam-labs/](https://marker1111014.github.io/harunaadoga-rhcsa-ex200-exam-labs/)
+- [完整深度學習指南](https://marker1111014.github.io/harunaadoga-rhcsa-ex200-exam-labs/rhcsa/index.html)
+- [單頁速記重點 (Cram Jam)](https://marker1111014.github.io/harunaadoga-rhcsa-ex200-exam-labs/rhcsa/cram.html)
 
 ## 倉庫結構
 
@@ -21,12 +25,13 @@
 
 ## 網頁存取與部署方式
 
-因為此倉庫為 **Private（私人）**，可透過以下方式在網頁瀏覽內容：
+可透過以下方式在網頁瀏覽或自行部署內容：
 
-1. **Vercel / Cloudflare Pages 部署（推薦）**：直接匯入此私人 GitHub 倉庫，無須額外建置指令（Framework Preset 選 `Other` / Static），Root Directory 保持 `.` 即可發布。
-2. **本機靜態伺服器預覽**：
+1. **GitHub Pages 線上閱讀（已啟用）**：直接由 `main` 分支根目錄 `.` 發佈，開啟 [GitHub Pages 入口首頁](https://marker1111014.github.io/harunaadoga-rhcsa-ex200-exam-labs/) 即可瀏覽。
+2. **其他靜態託管平台（Vercel / Cloudflare Pages）**：如需自行鏡像部署，可直接匯入此 GitHub 倉庫，無須額外建置指令（Framework Preset 選 `Other` / Static），Root Directory 保持 `.` 即可發布。
+3. **本機靜態伺服器預覽**：
    ```bash
    python3 -m http.server 8080
    ```
    啟動後於瀏覽器開啟 `http://localhost:8080`。
-3. **單檔離線開啟**：直接雙擊開啟 `rhcsa/index_standalone.html` 或 `rhcsa/cram_standalone.html` 即可於無網路環境檢視。
+4. **單檔離線開啟**：直接雙擊開啟 `rhcsa/index_standalone.html` 或 `rhcsa/cram_standalone.html` 即可於無網路環境檢視。
